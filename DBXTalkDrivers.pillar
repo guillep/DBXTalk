@@ -1,0 +1,43 @@
+{{title: DBXTalkDrivers}}
+{{author: DBXTalk Team}}
+!DBXTalk drivers
+
+!!OpenDBX driver
+
+It is a database driver that wraps the C library OpenDBXO (http://www.linuxnetworks.de/doc/index.php/OpenDBX). This allows users to perform relational database operations (DDL, DML and SQL) through an open source library. This subset of DBXTalk was formerly known as SqueakDBX.
+
+-*Compiling and installing OpenDBX native driver>#*
+-*Getting started With OpenDBX Driver>#*
+
+!!!Internals
+
+-*Architecture and Design>#*
+-*Benchmarks>#*
+-*Asynchronous queries>#*
+
+
+!!!Known problems
+
+-*OpenDBX and FFI>#*
+-*DBXTalk in 64 bits>#*
+
+DBXResult #rowsAffected will return zero in these situations: If an update, delete or insert is correct, has zero rows affected. However, it will also return zero if there is an error trying to obtain through OpenDBX, the rows affected. So, you can't really distinguish between these two conditions.
+
+!!Downloading OpenDBXDriver
+
+Download latest Pharo image from: *http://www.pharo-project.org/home*
+
+To install the opendbx driver for pharo, you need to:
+
+-Download the C openDBX driver for the database platform of your needs. You can get it in *http://www.linuxnetworks.de/doc/index.php/OpenDBX*
+
+-If in the previous step you have installed OpenDBX by using its binaries (no compilation), then you must install the databse client library (C library) of your database. 
+
+-Load the OpenDBX driver for pharo using metacello. For that, execute the following script in your pharo environment:
+
+[[[Gofer it
+    smalltalkhubUser: 'DBXTalk' project: 'Configurations';
+    configurationOf 'OpenDBXDriver';
+    loadStable.]]]
+
+*Ensuring this was installed ok>#*

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset='utf-8'>
+    <title>DBXTalkDrivers</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+
+    <div class="container">
+    	<div class="inner">
+    		<header>
+          <h1>Dbxtalk</h1>
+          <h2>DBXTalk repository</h2>
+        </header>
+    	
+    		<section id="downloads" class="clearfix">
+          <a href="https://github.com/guillep/DBXTalk/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/guillep/DBXTalk/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/guillep/DBXTalk" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+      	<h1>DBXTalk drivers</h1>
+<h2>1. OpenDBX driver</h2>
+<p>It is a database driver that wraps the C library OpenDBXO (http://www.linuxnetworks.de/doc/index.php/OpenDBX). This allows users to perform relational database operations (DDL, DML and SQL) through an open source library. This subset of DBXTalk was formerly known as SqueakDBX.</p>
+<ul><li><a href="##">¿?Compiling and installing OpenDBX native driver</a></li><li><a href="##">¿?Getting started With OpenDBX Driver</a></li></ul>
+<h3>1.1. Internals</h3>
+<ul><li><a href="##">¿?Architecture and Design</a></li><li><a href="##">¿?Benchmarks</a></li><li><a href="##">¿?Asynchronous queries</a></li></ul>
+
+<h3>1.2. Known problems</h3>
+<ul><li><a href="##">¿?OpenDBX and FFI</a></li><li><a href="##">¿?DBXTalk in 64 bits</a></li></ul>
+<p>DBXResult #rowsAffected will return zero in these situations: If an update, delete or insert is correct, has zero rows affected. However, it will also return zero if there is an error trying to obtain through OpenDBX, the rows affected. So, you can't really distinguish between these two conditions.</p>
+<h2>2. Downloading OpenDBXDriver</h2>
+<p>Download latest Pharo image from: <a href="http://www.pharo-project.org/home">http://www.pharo-project.org/home</a></p>
+<p>To install the opendbx driver for pharo, you need to:</p>
+<ul><li>Download the C openDBX driver for the database platform of your needs. You can get it in <a href="http://www.linuxnetworks.de/doc/index.php/OpenDBX">http://www.linuxnetworks.de/doc/index.php/OpenDBX</a></li></ul>
+<ul><li>If in the previous step you have installed OpenDBX by using its binaries (no compilation), then you must install the databse client library (C library) of your database. </li></ul>
+<ul><li>Load the OpenDBX driver for pharo using metacello. For that, execute the following script in your pharo environment:</li></ul>
+<p><figure><pre><code>    smalltalkhubUser: 'DBXTalk' project: 'Configurations';
+    configurationOf 'OpenDBXDriver';
+    loadStable.</code></pre><figcaption></figcaption></figure></p>
+<p><a href="##">¿?Ensuring this was installed ok</a></p>
+      	</section>
+      	<footer>
+    			<p>DBXTalk Team, </p>
+    		</footer>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </body>
+</html>
