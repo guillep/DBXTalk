@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MySQL in Pharo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+    <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>Accessing a database with MySQLDriver</h1>
+<h2>1. Introduction</h2>
+<p>This documentation is for the packet MysqlDriver, which you can load in a Pharo image via:
+<figure><pre><code class="Smalltalk">Gofer new
+	smalltalkhubUser: 'DBXTalk' project:'MysqlDriver';
+	configuration;
+	load.
+
+(ConfigurationOfMysqlDriver project version: #bleedingEdge) load</code></pre><figcaption></figcaption></figure></p>
+
+<h2>2. GlorpDriverMySQL Documentation</h2>
+
+<h3>2.1. Connection</h3><p>To connect on a database, you need to set the driver specs first:</p>
+<p><figure><pre><code class="Smalltalk">mySpecs := MysqlDriverSpec new
+	host: 'hostName';
+	port: 3306;
+	user: 'someone';
+	password: 'something';
+	db: 'dbName' .</code></pre><figcaption></figcaption></figure></p>
+<p>Now you have to instantiate the driver and make the connection
+<figure><pre><code class="Smalltalk">mysqlConnection := MysqlDriver new .
+mysqlConnection connect: mySpecs .
+	
+&quot;Checking the connection&quot;
+self assert: mysqlConnection connected .</code></pre><figcaption></figcaption></figure></p>
+<p>When you are done don't forget to close the connection :
+<figure><pre><code class="Smalltalk">mysqlConnection disconnect .</code></pre><figcaption></figcaption></figure></p>
+
+<h3>2.2. Queries</h3><h4>2.2.1. Simple queries</h4><p>How to make a simple query? It's simple (laugh)
+<figure><pre><code class="Smalltalk">mysqlConnection query: 'select 42' .</code></pre><figcaption></figcaption></figure></p>
+<h4>2.2.2. Prepared Request</h4><p>MysqlDriver supports prepared requests
+<figure><pre><code class="Smalltalk">preparedRequest := mysqlConnection prepare: 'select ?,?' .
+
+&quot;Check if the prepared request is valid&quot;
+self assert: preparedRequest isOkay .
+
+&quot;params is an array with all parameters of the prepared request&quot;
+params := Array with: (MysqlBindParam withValue: 42) with: (MysqlBindParam withValue: 23) .
+
+stmtId := preparedRequest prepareOkay stmtHandlerId.
+stmt := MysqlDriverStmt onConnection: mysqlConnection.
+stmt stmtId: stmtId; params: params.
+resp := stmt execute.</code></pre><figcaption></figcaption></figure></p>
+<p>Another way to bind the parameters:
+<figure><pre><code class="Smalltalk">preparedRequest := mysqlConnection prepare: 'select ?,?' .
+
+&quot;Check if the prepared request is valid&quot;
+self assert: preparedRequest isOkay .
+
+stmtId := preparedRequest prepareOkay stmtHandlerId.
+stmt := MysqlDriverStmt onConnection: mysqlConnection.
+stmt stmtId: stmtId; addBinding: 42; addBinding: 23.
+resp := stmt execute.</code></pre><figcaption></figcaption></figure></p>
+
+
+<h3>2.3. Interpreting mysql results</h3><p>After a query you can get three different types of response,</p><ul><li> A MysqlResultSet:</li></ul><p><figure><pre><code class="Smalltalk">response := mysqlConnection query: 'select 4,8,15,16,23,42' .
+self assert: response isResultSet .
+rows := response rows . 
+
+columns := rows at: 1 . &quot;Here we only have one query&quot;
+
+columns at: 1 . &quot;Return '4'&quot;
+columns at: 2 . &quot;Return '8'&quot;
+columns at: 3 . &quot;Return '15'&quot;
+columns at: 4 . &quot;Return '16'&quot;
+columns at: 5 . &quot;Return '23'&quot;
+columns at: 6 . &quot;Return '42'&quot;</code></pre><figcaption></figcaption></figure></p>
+<ul><li> A MysqlOkay:</li></ul><p><figure><pre><code class="Smalltalk">response := mysqlConnection query: 'create table if not exists TheMagicNumber(value int)' .
+
+self assert: response isResultSet not &amp; response isOkay .</code></pre><figcaption></figcaption></figure></p>
+
+<ul><li> A MysqlError:</li></ul><p><figure><pre><code class="Smalltalk">response := mysqlConnection query: 'You shall not pass' .
+
+self assert: response isError .
+
+respone message . &quot;Should be: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'You shall not pass' at line 1&quot;</code></pre><figcaption></figcaption></figure></p>
+    </div>
+    
+    <footer>
+      <p>Merwan Ouddane, Thomas Heniart, Franck Warlouzet, </p>
+      <p>Powered by Pillar</p>		
+    </footer>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

@@ -1,0 +1,120 @@
+{{title: MySQL in Pharo}}
+{{author: Merwan Ouddane, Thomas Heniart, Franck Warlouzet}}
+!Accessing a database with MySQLDriver
+
+!!Introduction
+
+This documentation is for the packet MysqlDriver, which you can load in a Pharo image via:
+[[[language=Smalltalk
+Gofer new
+	smalltalkhubUser: 'DBXTalk' project:'MysqlDriver';
+	configuration;
+	load.
+
+(ConfigurationOfMysqlDriver project version: #bleedingEdge) load
+]]]
+
+
+!!GlorpDriverMySQL Documentation
+
+
+!!!Connection
+To connect on a database, you need to set the driver specs first:
+
+[[[language=Smalltalk
+mySpecs := MysqlDriverSpec new
+	host: 'hostName';
+	port: 3306;
+	user: 'someone';
+	password: 'something';
+	db: 'dbName' .
+]]]
+
+Now you have to instantiate the driver and make the connection
+[[[language=Smalltalk
+mysqlConnection := MysqlDriver new .
+mysqlConnection connect: mySpecs .
+	
+"Checking the connection"
+self assert: mysqlConnection connected .
+]]]
+
+When you are done don't forget to close the connection :
+[[[language=Smalltalk
+mysqlConnection disconnect .
+]]]
+
+
+!!!Queries
+!!!!Simple queries
+How to make a simple query? It's simple (laugh)
+[[[language=Smalltalk
+mysqlConnection query: 'select 42' .
+]]]
+
+!!!!Prepared Request
+MysqlDriver supports prepared requests
+[[[language=Smalltalk
+preparedRequest := mysqlConnection prepare: 'select ?,?' .
+
+"Check if the prepared request is valid"
+self assert: preparedRequest isOkay .
+
+"params is an array with all parameters of the prepared request"
+params := Array with: (MysqlBindParam withValue: 42) with: (MysqlBindParam withValue: 23) .
+
+stmtId := preparedRequest prepareOkay stmtHandlerId.
+stmt := MysqlDriverStmt onConnection: mysqlConnection.
+stmt stmtId: stmtId; params: params.
+resp := stmt execute.
+]]]
+
+Another way to bind the parameters:
+[[[language=Smalltalk
+preparedRequest := mysqlConnection prepare: 'select ?,?' .
+
+"Check if the prepared request is valid"
+self assert: preparedRequest isOkay .
+
+stmtId := preparedRequest prepareOkay stmtHandlerId.
+stmt := MysqlDriverStmt onConnection: mysqlConnection.
+stmt stmtId: stmtId; addBinding: 42; addBinding: 23.
+resp := stmt execute.
+]]]
+
+
+
+!!!Interpreting mysql results
+After a query you can get three different types of response,
+- A MysqlResultSet:
+[[[language=Smalltalk
+response := mysqlConnection query: 'select 4,8,15,16,23,42' .
+self assert: response isResultSet .
+rows := response rows . 
+
+columns := rows at: 1 . "Here we only have one query"
+
+columns at: 1 . "Return '4'"
+columns at: 2 . "Return '8'"
+columns at: 3 . "Return '15'"
+columns at: 4 . "Return '16'"
+columns at: 5 . "Return '23'"
+columns at: 6 . "Return '42'"
+]]]
+
+- A MysqlOkay:
+[[[language=Smalltalk
+response := mysqlConnection query: 'create table if not exists TheMagicNumber(value int)' .
+
+self assert: response isResultSet not & response isOkay .
+]]]
+
+
+- A MysqlError:
+[[[language=Smalltalk
+response := mysqlConnection query: 'You shall not pass' .
+
+self assert: response isError .
+
+respone message . "Should be: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'You shall not pass' at line 1"
+]]]
