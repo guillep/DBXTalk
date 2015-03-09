@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset='utf-8'>
+    <title>DBXTalkDrivers</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+
+    <div class="container">
+    	<div class="inner">
+    		<header>
+          <h1>Dbxtalk</h1>
+          <h2>DBXTalk repository</h2>
+        </header>
+    	
+    		<section id="downloads" class="clearfix">
+          <a href="https://github.com/guillep/DBXTalk/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/guillep/DBXTalk/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/guillep/DBXTalk" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+      	<h1>Getting started With OpenDBX Driver</h1>
+<h2>1. Creating a database connection</h2>
+<p>The first step in order to execute a SQL statement in a database engine is to create a connection to that database. The DBXTalk OpenDBXDriver uses 3 objects to fulfill this objective: a connection object, which uses a platform/backend object and a connection settings object.</p>
+<p>For example, to open a connection to a MySQL database called sodbxtest, located in localhost you can use the following code:</p>
+<p><figure><pre><code>settings := DBXConnectionSettings
+			host: 'localhost'
+			port: '3306'
+			database: 'sodbxtest'
+			userName: 'sodbxtest'
+			userPassword: 'sodbxtest'.
+platform := DBXMySQLBackend new.
+connection := DBXConnection platform: platform settings: settings.
+
+connection connect.
+connection open.</code></pre><figcaption></figcaption></figure></p>
+<p>As you can see, after creating the connection object, you have to send it first the <strong>#connect</strong> message to let OpenDBX create all the needded internal structure. After that, you can send it the <strong>#open</strong> message to associate the connection to the desired database, verify the credentials and enable us to start sending querys.</p>
+<p>The main reason to separate these two operations is to configure some extra options before the connection is open. If you do not want to specify any of these options, you can send the <strong>#connectAndOpen</strong> message to the connection instead:</p>
+<p><figure><pre><code>connection connectAndOpen.</code></pre><figcaption></figcaption></figure></p>
+<p><a href="##">¿?Advanced configuration</a></p>
+<h2>2. Querying!</h2>
+<p>The execution of a SQL statement in the database of your desire is performed sending the <strong>#execute:</strong> message -or <strong>#executeMultiStatement:</strong> if enabled- to the connection object. So, once you have your connection established and open, you can try evaluating in a workspace code like:</p>
+<p><figure><pre><code>&quot;we create a table to store our trading card game cards in our MySQL database&quot;
+connection execute: 'CREATE TABLE CARD(ID INT AUTO_INCREMENT PRIMARY KEY, NAME VARCHAR(100))'.
+
+&quot;we insert some cards into our database&quot;
+connection execute: 'INSERT INTO CARDS (NAME) VALUES(''Giant Growth'')'.
+connection execute: 'INSERT INTO CARDS (NAME) VALUES(''Llanowar Elves'')'.
+
+&quot;If we did enable multistatements before opening the connection we can do some inserts at the same time&quot;
+connection executeMultiStatement: 'INSERT INTO CARDS (NAME) VALUES(''Rancor'');
+INSERT INTO CARDS (NAME) VALUES(''Counterspell'')'.
+
+&quot;we execute an invalid SQL statement to see how it raises a DBXError&quot;
+connection execute: 'some invalid sql statement'.</code></pre><figcaption></figcaption></figure></p>
+
+<h3>2.1. Fetching results</h3>
+<p>So far we have only executed statements without looking at their results. Each statement execution has a Result, which may be one of <strong>DBXResult</strong>, <strong>DBXResultSet</strong> and <strong>DBXMultiStatementResultSetIterator</strong>.</p>
+<p>A <strong>DBXResult</strong> is obtained when executing a SQL statement which does not have a set of rows as a result -such as a CREATE TABLE, INSERT or UPDATE operation. You can ask it for its <strong>#rowsAffected</strong> to know how many rows were affected in the operation.</p>
+<p><figure><pre><code>Transcript show: result rowsAffected.</code></pre><figcaption></figcaption></figure></p>
+<p>A SQL statement with rows as a result -such as a SELECT statement- brings a <strong>DBXResultSet</strong> as the result. A DBXResultSet is a consumable set of rows. This means that onces you've consumed all the rows in the DBXResultSet, they will not be available any more. You can work with a DBXResultSet in several ways:</p>
+<p><figure><pre><code>cardsResultSet := connection execute: 'SELECT * FROM CARDS'.
+cardsResultSet rowsDo: [ :row | Transcript show: (row valueAt: 1) ].
+
+&quot;Getting all rows from a result set:&quot;
+cardsResultSet := connection execute: 'SELECT * FROM CARDS'.
+rows := cardsResultSet rows.
+rows do: [ :row | Transcript show: (row valueAt: 1) ]
+
+&quot;Fetching one row at a time:&quot;
+cardsResultSet := connection execute: 'SELECT * FROM CARDS'.
+[ row := cardsResultSet nextRow.
+  row notNil ] 
+    whileTrue: [ Transcript show: (row valueAt: 1); cr </code></pre><figcaption></figcaption></figure>]</p>
+<p>When accessing a ResultSet rows, we get some <strong>DBXRow</strong> instances to play with. A DBXRow is the model of a database row, and each of the values for it's columns can be accessed in two formats: the raw format, which is the string representation of the value, sent by the database, and a converted format, which is the Pharo object representation for that object. The DBXRow objects understand some of the following messages:</p>
+<ul><li><strong>#valueAt:</strong> retrieves the converted value at the column in the given index.</li><li><strong>#values</strong> retrieves a sequenceable collection with all the converted values of the row.</li><li><strong>#rawValueAt:</strong> retrieves the raw value at the column in the given index.</li><li><strong>#rawValues</strong> retrieves a sequenceable collection with all the raw values of the row.</li></ul>
+<p>Some examples of the behavior of a DBXRow are the following:</p>
+<p><figure><pre><code>myRow rawValueAt: 1. &quot;-&gt; '1'     First column is INTEGER and contains a 1. It retrieves an string&quot;
+
+myRow values. &quot;-&gt; #(1 'Llanowar Elves')   A collection with every row value converted to Pharo objects.&quot;
+myRow rawValues. &quot;-&gt; #('1' 'Llanowar Elves') A collection with every row raw value.&quot;</code></pre><figcaption></figcaption></figure></p>
+<p>Finally, the other kind of result we can get from a SQL statement is a <strong>DBXMultiStatementResultSetIterator</strong>. It stands as a DBXResultSet container, for multi-statement querys. You can browse the results using the following convenience methods.</p>
+<p><figure><pre><code>myMultistatementResult allResultsDo: [ :aResult | &quot;doSometing here with the result&quot; ].
+
+&quot;iterating the results one by one.&quot;
+[result := myMultistatementResult next. result notNil] 
+    whileTrue: [ :aResult | &quot;doSometing here with the result&quot; ].</code></pre><figcaption></figcaption></figure></p>
+      	</section>
+      	<footer>
+    			<p>DBXTalk Team, </p>
+    		</footer>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </body>
+</html>
