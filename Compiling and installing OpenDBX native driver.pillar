@@ -1,0 +1,47 @@
+{{title: DBXTalkDrivers}}
+{{author: DBXTalk Team}}
+!Compiling and installing OpenDBX native driver
+
+
+Before you can start using OpenDBX driver, you need the OpenDBX native library. You can install it from binaries or you can compile it by yourself. At this point, you should be asking yourself which version to use. Because of this, we have in class OpenDBX a class method called currentOpenDBXVersion that tells you which version you must use. In addition, you can see ChangeLog information. In both cases, you must have installed your database client library first.
+
+!Step 1) Installing the database client library
+
+First of all, you may be asking yourself what "database client library" means. Each database vendor creates the database engine and then you should open a socket and implement the vendor protocol so that you can communicate to the database. As this is painful and requires a lot of time, vendors give as (programmers) "drivers". Using these drivers is simpler than opening a socket and give us an API to talk to the database. This drivers can be of different programming languages like C, Java (called JDBC), etc. ALL vendors provide a driver written in C but usually not one in smalltalk. This driver is the one often called "database client library". In summary, the database client library is the C database driver :)
+
+The installation depends on the vendor. Sometimes in the same executable you have the server and the client. Sometimes you need to install a separate package for the client. 
+
+-*Installing backends in Windows>#*
+-*Installing backends in Linux>#*
+-*Installing backends in MacOS>#*
+
+!Step 2) Installing OpenDBX from binaries
+
+-*Installing OpenDBX from binaries in Windows>#*
+-*Installing OpenDBX from binaries in Linux>#*
+-*Installing OpenDBX from binaries in MAC os>#*
+
+!Step 2 Alternative) Compiling OpenDBX
+
+-*Compiling OpenDBX from source in Windows>#*
+-*Compiling OpenDBX from binaries in Linux>#*
+-*Compiling OpenDBX from binaries in MAC os>#*
+
+!Step 3) Testing
+
+After compiling and installing OpenDBX, there is a good way to see if everything is working as expected. Go to the directory where you uncompressed OpenDBX. Do "cd test" and then, for example:
+
+
+[[[
+$ ./odbxtest -b pgsql -h localhost -p 5432 -d myDatabase -u myUser -w myPass
+]]]
+
+where
+
+[[[
+$ ./odbxtest -b <backend> -h <host> -p <port> -d <database name> -u <user> -w <password>
+]]]
+
+If you compiled it with other backend you must test it with that in particular. This test will create tables, insert, select, update and delete data. Finally, It will drop all tables. If you have an error executing this test, it means there is a problem with OpenDBX, so you won't be able to use Smalltalk OpenDBX driver till you fix that.
+
+
