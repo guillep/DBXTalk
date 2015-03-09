@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset='utf-8'>
+    <title>DBXTalkDrivers</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+
+    <div class="container">
+    	<div class="inner">
+    		<header>
+          <h1>Dbxtalk</h1>
+          <h2>DBXTalk repository</h2>
+        </header>
+    	
+    		<section id="downloads" class="clearfix">
+          <a href="https://github.com/guillep/DBXTalk/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/guillep/DBXTalk/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/guillep/DBXTalk" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+      	<h1>Compiling and installing OpenDBX native driver</h1>
+
+<p>Before you can start using OpenDBX driver, you need the OpenDBX native library. You can install it from binaries or you can compile it by yourself. At this point, you should be asking yourself which version to use. Because of this, we have in class OpenDBX a class method called currentOpenDBXVersion that tells you which version you must use. In addition, you can see ChangeLog information. In both cases, you must have installed your database client library first.</p>
+<h1>Step 1) Installing the database client library</h1>
+<p>First of all, you may be asking yourself what &quot;database client library&quot; means. Each database vendor creates the database engine and then you should open a socket and implement the vendor protocol so that you can communicate to the database. As this is painful and requires a lot of time, vendors give as (programmers) &quot;drivers&quot;. Using these drivers is simpler than opening a socket and give us an API to talk to the database. This drivers can be of different programming languages like C, Java (called JDBC), etc. ALL vendors provide a driver written in C but usually not one in smalltalk. This driver is the one often called &quot;database client library&quot;. In summary, the database client library is the C database driver :)</p>
+<p>The installation depends on the vendor. Sometimes in the same executable you have the server and the client. Sometimes you need to install a separate package for the client. </p>
+<ul><li><a href="##">¿?Installing backends in Windows</a></li><li><a href="##">¿?Installing backends in Linux</a></li><li><a href="##">¿?Installing backends in MacOS</a></li></ul>
+<h1>Step 2) Installing OpenDBX from binaries</h1>
+<ul><li><a href="##">¿?Installing OpenDBX from binaries in Windows</a></li><li><a href="##">¿?Installing OpenDBX from binaries in Linux</a></li><li><a href="##">¿?Installing OpenDBX from binaries in MAC os</a></li></ul>
+<h1>Step 2 Alternative) Compiling OpenDBX</h1>
+<ul><li><a href="##">¿?Compiling OpenDBX from source in Windows</a></li><li><a href="##">¿?Compiling OpenDBX from binaries in Linux</a></li><li><a href="##">¿?Compiling OpenDBX from binaries in MAC os</a></li></ul>
+<h1>Step 3) Testing</h1>
+<p>After compiling and installing OpenDBX, there is a good way to see if everything is working as expected. Go to the directory where you uncompressed OpenDBX. Do &quot;cd test&quot; and then, for example:</p>
+
+<p><figure><pre><code>$ ./odbxtest -b pgsql -h localhost -p 5432 -d myDatabase -u myUser -w myPass</code></pre><figcaption></figcaption></figure></p>
+<p>where</p>
+<p><figure><pre><code>$ ./odbxtest -b &lt;backend&gt; -h &lt;host&gt; -p &lt;port&gt; -d &lt;database name&gt; -u &lt;user&gt; -w &lt;password&gt;</code></pre><figcaption></figcaption></figure></p>
+<p>If you compiled it with other backend you must test it with that in particular. This test will create tables, insert, select, update and delete data. Finally, It will drop all tables. If you have an error executing this test, it means there is a problem with OpenDBX, so you won't be able to use Smalltalk OpenDBX driver till you fix that.</p>
+
+
+      	</section>
+      	<footer>
+    			<p>DBXTalk Team, </p>
+    		</footer>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </body>
+</html>
