@@ -1,0 +1,13 @@
+Download Pillar for Linux :
+
+wget -O- https://raw.githubusercontent.com/pillar-markup/book-skeleton/master/download.sh | bash
+
+
+In direcotry where Pillar is installed Pillar command to export .pillar files to .html files :
+
+./export --to=html file.pillar > file.html
+
+
+Documentation for Pillar syntax :
+
+See 5 minutes tutorial : https://ci.inria.fr/pharo-contribution/job/EnterprisePharoBook/lastSuccessfulBuild/artifact/PillarChap/Pillar.pillar.html
