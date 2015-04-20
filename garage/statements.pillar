@@ -1,11 +1,9 @@
 {{baseurl:/DBXTalk}}
-{{title: DBXTalk Driver Phase Three - Statements}}
-
-This is the third post in a series about the new DBXTalk database driver. 
+{{title: Using Statement Objects}}
 
 !!Statement Objects
 
-Statement objects support fine-grain control over statements sent to a database. We can create a statement object by sending the ""createMessage:"" message to a connection object with a SQL statement string, or the ""createStatement"" and then configuring the statement with the ""statementString:"" message.
+Statement objects support fine-grained control over statements sent to a database. We can create a statement object by sending the ""createStatement:"" message to a connection object with a SQL statement string, or the ""createStatement"" and then configuring the statement with the ""statementString:"" message.
 
 [[[language=Smalltalk
 aStatement := connection createStatement: 'CREATE TABLE CATS (
@@ -23,7 +21,7 @@ result := aStatement execute.
 result do: [ ... ].
 ]]]
 
-Statement objects can be reused. We can send them multiple times the ""execute"" message and obtain our results multiple times. This is particularly useful to avoid statements with complex creations or already optimized by the database, as we will see in the following sections.
+Statement objects can be reused. We can send them multiple times the ""execute"" message and obtain our results multiple times. This is particularly useful to avoid statements with complex creations or already optimized by the database, as we will see later on.
 
 [[[language=Smalltalk
 result := aStatement execute.
@@ -36,7 +34,7 @@ aStatement execute do: [ ... ].
 
 !!Prepared Statements
 
-Some statement objects can be ""prepared"". A prepared statement is a statement that is sent to the database to pre-process it. The database server can pre-parse it, cache results or even the execution plan. Prepared statements show useful by reusing statements. A prepared statement can be prepared sending the ""prepare:"" message to a connection with a SQL statement string, or by sending the ""prepare"" message to an already existing statement.
+Some drivers support ""prepared"" statements. A prepared statement is a statement that is sent to the database to pre-process it. The database server can pre-parse it, cache results or even pre-calculate how it will execute the query. A prepared statement can be created by sending the ""prepare:"" message to a connection with a SQL statement string, or by sending the ""prepare"" message to an already existing statement.
 
 [[[language=Smalltalk
 preparedStatement := connection prepare: 'SELECT * FROM CATS'.
@@ -45,7 +43,7 @@ anotherPreparedStatement := aStatement createStatement: 'SELECT * FROM CATS'.
 anotherPreparedStatement prepare.
 ]]]
 
-Although prepared statements benefits, they are not equally supported by every database nor driver. Different databases support the preparation of different kind of statements, and not all database drivers support prepared statements. On one side, when a database driver supports prepared statements, the statement is be sent to the database for its preparation immediately after the ""prepare"" message. If the sent statement cannot be prepared by the database, an exception will be thrown notifying it. On the other side, when a database driver does not support prepared statements, the statement will not be sent to the database nor fail. Indeed, it will continue to be an unprepared statement to provide a polymorphic interface to the user. We can send the message ""supportsPreparedStatements"" to a database connection to know if it supports prepared statements.
+Although prepared statements benefits, they are not equally supported by every database nor driver. Different databases support the preparation of different kind of statements, and not all database drivers support prepared statements. When a database driver supports prepared statements, the statement is sent to the database for its preparation immediately after the ""prepare"" message. If the sent statement cannot be prepared by the database, an exception will be thrown notifying it. If a database driver does not support prepared statements, the preparation will also fail with an exception. To know if a driver supports prepared statements, we can send the message ""supportsPreparedStatements"" to a database connection.
 
 [[[language=Smalltalk
 aConnection supportsPreparedStatements
@@ -53,15 +51,18 @@ aConnection supportsPreparedStatements
 	ifFalse: [ ... ]
 ]]]
 
+@@todo ""TODO:"" provide a table with the drivers that support it. Also table of what kind of statements can be prepared by database
+@@todo ask the database which kind of statements it supports for preparation
+
 !!!!Sanitizing SQL
 
-Composing strings to create a SQL statement can be cumbersome but also an unsafe way of creating a query. Attackers may benefit from wrongly sanitized SQL to perform SQL injection: the injection of SQL attacks inside a query. For example, given the following query, we could be able to inject a DROP TABLE script if not correctly concatenated.
+Composing strings to create a SQL statement can be cumbersome but also an unsafe way of creating a query. Attackers may benefit from wrongly sanitized SQL to perform SQL injection: the injection of SQL attacks inside a query. For example, considering the following SELECT query
 
 [[[language=SQL
 SELECT * FROM TABLE WHERE name=<some param>
 ]]]
 
-And get a SQL statement like this.
+If we naively concatenate it with the string we receive as an argument from a user, the user could be able to inject a DROP TABLE script like this:
 
 [[[language=SQL
 SELECT * FROM CATS WHERE name='';DROP TABLE CATS;
@@ -81,7 +82,9 @@ SELECT * FROM TABLE WHERE name=':name'
 
 The DBXTalk driver, by pursuing a common interface between different database drivers, only proposes question mark placeholders (""?"") in a SQL statement.
 
-A statement placeholders can be filled with arguments using the ""bind:"" message. The ""bind:"" message accepts as argument any Pharo object and will transform it accordingly to its database representation. If no bind is specified, it is responsability of the driver to decide what to do. For example, SQLite3 will interpret missing bindings as ""NULL"".
+A statement placeholders can be filled with arguments using the ""at:bind:"" message. The ""at:bind:"" message accepts as argument any Pharo object and will transform it accordingly to its database representation. If no bind is specified, it is responsability of the driver to decide what to do. For example, SQLite3 will interpret missing bindings as ""NULL"".
+
+@@todo ""TODO:"" provide a table with these defaults.
 
 [[[language=Smalltalk
 statement := connection prepare: 'SELECT * FROM CATS WHERE name='?''.
@@ -111,22 +114,15 @@ result := statement execute.
 ]]]
 
 [[[language=Smalltalk
-SELECT * FROM CATS WHERE name='''';DROP TABLE TABLE;
+SELECT * FROM CATS WHERE name='lutz' OR owner='guille'
 ]]]
-
-The placehoder bindings feature is, however, only supported from the database server and for prepared statements. For those drivers that do not include prepared statements, the DBXDriver provides with some escaping helpers. Escaping helpers try to sanitize locally the input parameters with a series of character escaping techniques. Note that local character escaping does not guarantee the safety of statement execution. They do indeed benefit from other complementary techniques such as input validation and correct database permission control.
 
 !!!!Statement Options
 
-get auto generated keys
+@@todo get auto generated keys
 
-query timeout
+@@todo query timeout
 
-!!!!Next
 
-TODO:
-- table of what kind of statements can be prepared by database
-- ask the database which kind of statements it supports for preparation
-- maybe add an age to the cat to use only one example
-- how to see the result description (column names and types)
-- table of database types
+@@todo how to see the result description (column names and types)
+@@todo table of database types
