@@ -386,16 +386,16 @@ footer a:hover {
 
 .warning {
     background-color: #FD9797;
-    border-color: #FF2020;
 	padding: 5px;
-}
-
-.warning h4 {
-    color: yellow;
 }
 
 .todo {
     background-color: #dff0d8;
-    border-color: #d6e9c6;
 	padding: 5px;
+}
+
+.info {
+    background-color: #7E74DF;
+	color: #DADADA;
+	padding: 15px;
 }

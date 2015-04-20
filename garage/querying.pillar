@@ -1,11 +1,9 @@
 {{baseurl:/DBXTalk}}
-{{title: DBXTalk Driver Phase Two - Querying a database}}
-
-This is the second post in a series about the new DBXTalk database driver.
+{{title: More on Queries}}
 
 !!Executing queries
 
-With the DBXTalk driver, the simplest way to execute a SQL query is by sending the message ""execute:"" to a connection object. The message ""execute:"" accepts ""any"" kind of statements, from SELECT and INSERT queries to CREATE TABLE or CREATE FOREIGN KEY statements.
+With Garage, the simplest way to execute a SQL query is by sending the message ""execute:"" to a connection object. The message ""execute:"" accepts ""any"" kind of statements, from SELECT and INSERT queries to CREATE TABLE or CREATE FOREIGN KEY statements.
 
 [[[language=Smalltalk
 connection execute: 'CREATE TABLE CATS (
@@ -20,7 +18,7 @@ Using the ""execute:"" message, the driver will immediately sent the query to th
 
 !!!Statement results
 
-Executing a statements such as INSERT, UPDATE or CREATE TABLE do no return a set of rows as a result. Instead they only notify the amount of affected rows in the database. We can access the amount of affected rows of a result by sending it the ""rowsAffected"" message. However, the value returned by ""rowsAffected"" will vary between different database servers. For example, generally database servers return the amount of rows that result from the ""WHERE"" clause. However, MySQL does only count the rows whose values have really been changed. To know if a driver returns the number of really changed rows as affected rows, they understand the ""affectsOnlyChangedRows"" message.
+Executing a statements such as INSERT, UPDATE or CREATE TABLE does not return a set of rows as a result. Instead they notify the number of affected rows in the database. We can access the number of affected rows of a result by sending it the ""rowsAffected"" message. However, the value returned by ""rowsAffected"" will vary between different database servers. For example, generally database servers return the number of rows that result from the ""WHERE"" clause. However, MySQL only counts the rows whose values have effectively changed. To know if a driver returns the number of really changed rows as affected rows, they understand the ""affectsOnlyChangedRows"" message.
 
 [[[language=Smalltalk
 mysqlConnection affectsOnlyChangedRows. "=> true"
@@ -29,7 +27,8 @@ pgsqlConnection affectsOnlyChangedRows. "=> false"
 
 In general, statements will return the following as affected rows:
 
-- Data Definition Language (DDL) statements: DDL statements such as CREATE TABLE affect no rows. ""rowsAffected"" returns zero.
+;Data Definition Language (DDL) statements
+:DDL statements such as CREATE TABLE affect no rows. ""rowsAffected"" returns zero.
 
 [[[language=Smalltalk
 result := connection execute: 'CREATE TABLE CATS (
@@ -39,7 +38,8 @@ result := connection execute: 'CREATE TABLE CATS (
 self assert: result affectedRows = 0.
 ]]]
 
-- INSERT statement: An INSERT statement insert one row and thus, ""rowsAffected"" returns one.
+;INSERT statement
+:An INSERT statement insert one row and thus, ""rowsAffected"" returns one.
 
 [[[language=Smalltalk
 result := connection execute: 'INSERT INTO CATS(name, owner) VALUES (''lutz'', ''julien'')'.
@@ -49,7 +49,8 @@ result := connection execute: 'INSERT INTO CATS(name, owner) VALUES (''inuk'', '
 self assert: result affectedRows = 1.
 ]]]
 
-- DELETE and UPDATE statement: DELETE and UPDATE statements affect the rows that correspond to the WHERE clause, or all rows in the table if no WHERE clause is written. ""rowsAffected"" returns the amount of rows selected by the WHERE clause.
+;DELETE and UPDATE statement
+:DELETE and UPDATE statements affect the rows that correspond to the WHERE clause, or all rows in the table if no WHERE clause is written. ""rowsAffected"" returns the amount of rows selected by the WHERE clause.
 
 [[[language=Smalltalk
 result := connection execute: 'UPDATE FROM CATS SET owner=''guille'''.
@@ -60,9 +61,11 @@ self assert: result affectedRows = 1.
 ]]]
 
 
-!!!Iterating Results
+!!!Iterating Rows
 
-Differently from the statements we have already seen, SELECT statements return a set of rows as a result, namely a ""result set"". A result set behaves almost as an sequenceable collection of rows. It provides, for example, the usual Pharo's iteration methods such as ""do:"", ""collect:"" and ""select:"". Notice that a normal SELECT statement executed through the ""execute:"" message will bring from the database all results at once. To focus in this post on how to iterate the results, we will postergate to a next post the optimization of row retrieval.
+Differently from the statements we have already seen, SELECT statements return a set of rows as a result, namely a ""result set"". A Garage result set behaves almost as an sequenceable collection of rows. It provides, for example, the usual Pharo's iteration methods such as ""do:"", ""collect:"" and ""select:"".
+
+@@info ""INFO:"" Notice that a normal SELECT statement executed through the ""execute:"" message brings all results at once. In a next article we will discuss the optimization of row retrieval.
 
 [[[language=Smalltalk
 result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
@@ -93,9 +96,11 @@ stream := result readStream.
 
 Notice that a result set does not have a ""size"" method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.
 
+@@todo ""TODO:"" This is maybe implementable.
+
 !!!Accessing Row Values
 
-The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the ""atName:"" and ""atIndex:"" messages. However, notice that the column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columnts we asked for. The order in which those columnts are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column through the alias and not it's original name. 
+The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the ""atName:"" and ""atIndex:"" messages. Notice that the column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. 
 
 [[[language=Smalltalk
 result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
@@ -109,7 +114,7 @@ self assert: (catRow atIndex: 2) equals: 'julien'.
 ]]]
 
 
-Notice that the results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type ""INTEGER"", the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depends on each of the databases and their corresponding driver.
+Notice that the results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type ""INTEGER"", the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depend on the particular databases and its driver implementation.
 
 [[[language=Smalltalk
 result := connection execute: 'SELECT COUNT(*) as count FROM CATS'.
@@ -117,24 +122,6 @@ row := result rows first.
 
 self assert: (catRow atName: 'count') equals: 1.
 ]]]
-
-For those that do not like accessing transformed data a row provides access to the raw values obtained from the database in form of strings. For that, there exist the messages ""rawAtName:"" and ""rawAtIndex:"". Note that depending on the implementation on the driver, this raw value may be calculated. For example, SQLite as it is an FFI implementation or Mysql as it implements a binary protocol do not exchange pure strings with the database. To know if a driver provides directly raw elements, they understand the message ""supportsRawAccess"".
-
-[[[language=Smalltalk
-result := connection execute: 'SELECT COUNT(*) as count FROM CATS'.
-row := result rows first.
-
-self assert: (row rawAtIndex: 'count') equals: '1'.
-self assert: (row rawAtName: 'count') equals: '1'.
-
-connection supportsRawAccess." => if true raw values are directly available, if false they are converted by the driver when asked"
-]]]
-
-!!!Next
-
-- prepared statements
-- Sanitizing SQL
-
 
 
 
