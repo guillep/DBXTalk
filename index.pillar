@@ -1,3 +1,5 @@
+{{baseurl:/DBXTalk}}
+{{title:index.html}}
 !Welcome to DBXTalk
 
 DBXTalk is the relational database suite for the <a href="http://pharo.org">Pharo</a> live programming language. DBXTalk is an umbrella for the following projects:</p>
