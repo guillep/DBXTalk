@@ -11,11 +11,28 @@ Garage is the relational database driver for the *Pharo>http://pharo-project.org
 !!Getting Started
 
 !!!{{{html:<a href="installation.pillar.html">Installation</a>}}}
+
+Installing Garage in many flavors. How to specify the driver you want and test your installation.
+
 !!!{{{html:<a href="getting_started.pillar.html">Basic Usage</a>}}}
+
+Introduction to Garage. How to connect to a database and execute a query.
+
 !!!{{{html:<a href="querying.pillar.html">Queries</a>}}}
+
+Different queries and statements: SELECT, UPDATE, INSERT, DELETE, CREATE. How to iterate the results of your query using a resultset and a ''cursored'' like API with streams.
+
 !!!{{{html:<a href="statements.pillar.html">Statements</a>}}}
+
+Customizing queries using statement objects. How to prepare statements.
+
 !!!{{{html:<a href="transactions.pillar.html">Transactions</a>}}}
+
+Transactions in the Garage.
+
 !!!{{{html:<a href="advanced.pillar.html">Advanced</a>}}}
+
+To come...
 
 !!Wishlist
 
