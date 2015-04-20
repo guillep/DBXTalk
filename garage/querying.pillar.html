@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset='utf-8'>
+    <title>DBXTalk Driver Phase Two - Querying a database</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <div class="container">
+    	<div class="inner">
+    	<header>
+		  <img src="/images/dbxtalk.png" style="height:100px;float:left; margin-right: 10px" />
+          <h1>dbxtalk</h1>
+          <h2>Pharo Relational Database Suite</h2>
+        </header>
+    	
+    		<section id="downloads" class="clearfix">
+          <a href="https://github.com/guillep/DBXTalk/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/guillep/DBXTalk/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/guillep/DBXTalk" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+      	
+<p>This is the second post in a series about the new DBXTalk database driver.</p>
+<h2>1. Executing queries</h2>
+<p>With the DBXTalk driver, the simplest way to execute a SQL query is by sending the message <strong>execute:</strong> to a connection object. The message <strong>execute:</strong> accepts <strong>any</strong> kind of statements, from SELECT and INSERT queries to CREATE TABLE or CREATE FOREIGN KEY statements.</p>
+<p><figure><pre><code class="Smalltalk">connection execute: 'CREATE TABLE CATS (
+	name varchar(50),
+	owner varchar(50))'.
+
+connection execute: 'SELECT * FROM CATS'.</code></pre><figcaption></figcaption></figure></p>
+<p>Using the <strong>execute:</strong> message, the driver will immediately sent the query to the database and interpret the results. If there is a syntax error in the query, the operation will fail with an exception indicating where such error was produced.</p>
+
+<h3>1.1. Statement results</h3>
+<p>Executing a statements such as INSERT, UPDATE or CREATE TABLE do no return a set of rows as a result. Instead they only notify the amount of affected rows in the database. We can access the amount of affected rows of a result by sending it the <strong>rowsAffected</strong> message. However, the value returned by <strong>rowsAffected</strong> will vary between different database servers. For example, generally database servers return the amount of rows that result from the <strong>WHERE</strong> clause. However, MySQL does only count the rows whose values have really been changed. To know if a driver returns the number of really changed rows as affected rows, they understand the <strong>affectsOnlyChangedRows</strong> message.</p>
+<p><figure><pre><code class="Smalltalk">mysqlConnection affectsOnlyChangedRows. &quot;=&gt; true&quot;
+pgsqlConnection affectsOnlyChangedRows. &quot;=&gt; false&quot;</code></pre><figcaption></figcaption></figure></p>
+<p>In general, statements will return the following as affected rows:</p>
+<ul><li> Data Definition Language (DDL) statements: DDL statements such as CREATE TABLE affect no rows. <strong>rowsAffected</strong> returns zero.</li></ul>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'CREATE TABLE CATS (
+	name varchar(50),
+	owner varchar(50))'.
+
+self assert: result affectedRows = 0.</code></pre><figcaption></figcaption></figure></p>
+<ul><li> INSERT statement: An INSERT statement insert one row and thus, <strong>rowsAffected</strong> returns one.</li></ul>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'INSERT INTO CATS(name, owner) VALUES (''lutz'', ''julien'')'.
+self assert: result affectedRows = 1.
+
+result := connection execute: 'INSERT INTO CATS(name, owner) VALUES (''inuk'', ''victor'')'.
+self assert: result affectedRows = 1.</code></pre><figcaption></figcaption></figure></p>
+<ul><li> DELETE and UPDATE statement: DELETE and UPDATE statements affect the rows that correspond to the WHERE clause, or all rows in the table if no WHERE clause is written. <strong>rowsAffected</strong> returns the amount of rows selected by the WHERE clause.</li></ul>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'UPDATE FROM CATS SET owner=''guille'''.
+self assert: result affectedRows = 2.
+
+result := connection execute: 'DELETE FROM CATS WHERE name=''lutz'''.
+self assert: result affectedRows = 1.</code></pre><figcaption></figcaption></figure></p>
+
+<h3>1.2. Iterating Results</h3>
+<p>Differently from the statements we have already seen, SELECT statements return a set of rows as a result, namely a <strong>result set</strong>. A result set behaves almost as an sequenceable collection of rows. It provides, for example, the usual Pharo's iteration methods such as <strong>do:</strong>, <strong>collect:</strong> and <strong>select:</strong>. Notice that a normal SELECT statement executed through the <strong>execute:</strong> message will bring from the database all results at once. To focus in this post on how to iterate the results, we will postergate to a next post the optimization of row retrieval.</p>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
+result do: [ :row | ... ].
+result select: [ :row | ... ].
+result collect: [ :row | ... ].</code></pre><figcaption></figcaption></figure></p>
+<p>Other helper methods allows us to access particular elements inside the result set. <strong>first</strong> returns the first row of the result set. <strong>at:</strong> returns the row at a particular index. In case there is no row in the demanded index, the message will fail with an exception. <strong>isEmpty</strong> tells if the result did not bring any rows from the database.</p>
+<p><figure><pre><code class="Smalltalk">result first.
+result at: 1.</code></pre><figcaption></figcaption></figure></p>
+<p>A result set can also be iterated as a cursor asking it for a <strong>readStream</strong>. Stream access to a result set is useful when we do not want to iterate the whole collection at once but instead defer the iteration in time. Using stream access the method <strong>next</strong> returns the element that follows in the stream while <strong>next:</strong> returns a collection with the following <strong>N</strong> rows where <strong>N</strong> is the number used as argument. <strong>next:</strong> will return at least the required amount of rows, except in the case where there are no more rows. When there are no more rows in the stream, <strong>next</strong> returns <strong>nil</strong> and <strong>next:</strong> returns an empty array.</p>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
+stream := result readStream.
+
+(stream next: 10) do: [ :row | ... ].
+
+[ next := stream next. next isNil ] whileFalse: [
+   ...
+]</code></pre><figcaption></figcaption></figure></p>
+<p>Notice that a result set does not have a <strong>size</strong> method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.</p>
+<h3>1.3. Accessing Row Values</h3>
+<p>The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the <strong>atName:</strong> and <strong>atIndex:</strong> messages. However, notice that the column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columnts we asked for. The order in which those columnts are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column through the alias and not it's original name. </p>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
+catRow := result rows first.
+
+self assert: (catRow atName: 'catname') equals: 'lutz'.
+self assert: (catRow atName: 'owner') equals: 'julien'.
+
+self assert: (catRow atIndex: 1) equals: 'lutz'.
+self assert: (catRow atIndex: 2) equals: 'julien'.</code></pre><figcaption></figcaption></figure></p>
+
+<p>Notice that the results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type <strong>INTEGER</strong>, the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depends on each of the databases and their corresponding driver.</p>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT COUNT(*) as count FROM CATS'.
+row := result rows first.
+
+self assert: (catRow atName: 'count') equals: 1.</code></pre><figcaption></figcaption></figure></p>
+<p>For those that do not like accessing transformed data a row provides access to the raw values obtained from the database in form of strings. For that, there exist the messages <strong>rawAtName:</strong> and <strong>rawAtIndex:</strong>. Note that depending on the implementation on the driver, this raw value may be calculated. For example, SQLite as it is an FFI implementation or Mysql as it implements a binary protocol do not exchange pure strings with the database. To know if a driver provides directly raw elements, they understand the message <strong>supportsRawAccess</strong>.</p>
+<p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT COUNT(*) as count FROM CATS'.
+row := result rows first.
+
+self assert: (row rawAtIndex: 'count') equals: '1'.
+self assert: (row rawAtName: 'count') equals: '1'.
+
+connection supportsRawAccess.&quot; =&gt; if true raw values are directly available, if false they are converted by the driver when asked&quot;</code></pre><figcaption></figcaption></figure></p>
+<h3>1.4. Next</h3>
+<ul><li> prepared statements</li><li> Sanitizing SQL</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+      	</section>
+		<footer>
+          Dbxtalk is maintained by <a href="https://github.com/guillep">guillep</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </body>
+</html>
