@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/pygment_trac.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/print.css" media="print">
+	<script src="/DBXTalk/highlight/highlight.pack.js"></script>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -58,7 +59,7 @@
 <h3>1.3. External dependencies</h3>
 <p>Some drivers require the extra installation of external dependencies such as libraries. This is the case of e.g., the sqlite and the opendbx drivers. These libraries should be installed in your system and be reachable by the virtual machine executable by doing one of the following:</p>
 <ul><li> specifying the LD_LIBRARY_PATH environment for the virtual machine</li><li> installing the libraries in a globally visible directory (/usr/lib or System32)</li><li> installing the libraries in the same directory as the virtual machine</li><li> creating symlinks in a directory visible to the virtual machine pointing to the installed libraries</li></ul>
-<p class="TODO">point to the download links of each particular library</p>
+<p class="todo"><strong>TODO:</strong> point to the download links of each particular library</p>
 <h2>2. Checking my installation</h2>
 <p>Once we installed our driver, we can check our installation by running the tests. However, we should well understand which are the drivers we installed and how to configure the tests in our machine setup.</p>
 <h3>2.1. Which are the drivers I have</h3>
@@ -72,7 +73,7 @@ GADriver isAvailable: #MySQl.
 	&quot; =&gt; true&quot;</code></pre><figcaption></figcaption></figure></p>
 <h3>2.2.  Running the tests</h3>
 <p>Garage already provides a set of tests that check the correctness of the driver and thus, your particular installation. To test your installation you should tell the driver where to find your database server and how to connect to it.</p>
-<p class="Warning">Garage tests will try to create a database named <em>sodbxtest</em> and many tables inside it to test. This should not be a problem but be careful if you intend to test your installation in a productive environment.</p>
+<p class="warning"><strong>Warning:</strong> Garage tests will try to create a database named <em>sodbxtest</em> and many tables inside it to test. This should not be a problem but be careful if you intend to test your installation in a productive environment.</p>
 <p>Garage provides two ways to configure the tests to run. The first and simpler one is to override the method <strong>GADriverTest&gt;&gt;createFixture</strong>. This method should return a fixture that the tests are going to use to run. The method as you download it is as follows:</p>
 <p><figure><pre><code class="Smalltalk">GADriverTest&gt;&gt;createFixture
 
@@ -89,17 +90,13 @@ GADriver isAvailable: #MySQl.
 		setupConnectionString: SetupConnectionString
 		connectionString: ConnectionString&quot;</code></pre><figcaption></figcaption></figure></p>
 <p>To provide a test fixture you should uncomment the last three lines and set two connection strings: the setup connection string and the test connection string. The setup connection string will be used by the fixture to create and drop the <em>sodbxtest</em> database. The test connection string will connect to this database to perform the tests. A typical setup is as follows:</p>
-<p>[[language=Smalltalk
-GADriverTestFixture 
+<p><figure><pre><code class="Smalltalk">GADriverTestFixture 
 	setupConnectionString: 'mysql://localhost:3306?user=sodbxtest&amp;password=sodbxtest'
-	connectionString: 'mysql://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest'
-]]</p>
+	connectionString: 'mysql://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest'</code></pre><figcaption></figcaption></figure></p>
 <p>Alternatively, you can also configure a test fixture without altering any methods, executing the following expression. If you use this option, make sure you version your scripts as they are not logged by default in version control systems and you make loose such information.</p>
-<p>[[language=Smalltalk
-GADriverTest fixture: (GADriverTestFixture 
+<p><figure><pre><code class="Smalltalk">GADriverTest fixture: (GADriverTestFixture 
 	setupConnectionString: 'mysql://localhost:3306?user=sodbxtest&amp;password=sodbxtest'
-	connectionString: 'mysql://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest').
-]]</p>
+	connectionString: 'mysql://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest').</code></pre><figcaption></figcaption></figure></p>
 <p>Then, running the tests should produce a set of all-green tests. If you want to compare with the latest version of Garage, you can check its status in its <a href="https://ci.inria.fr/dbxtalk/view/Garage/">CI job</a></p>
       	</section>
 		<footer>
