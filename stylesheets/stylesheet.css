@@ -52,7 +52,7 @@ body {
   font-size: 1em;
   line-height: 1.5;
   color: #6d6d6d;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  text-shadow: none;
   background: #e7e7e7 url(../images/body-bg.png) 0 0 repeat;
 }
 
@@ -218,17 +218,23 @@ em {
 
 table {
   width: 100%;
-  border: 1px solid #ebebeb;
+  border: 1px solid #BEA6CA;
+}
+
+tr {
+  border-left: 1px solid #BEA6CA;
+  border-right: 1px solid #BEA6CA;
 }
 
 th {
   font-weight: 500;
+  border-top: 1px solid #BEA6CA;
 }
 
 td {
   font-weight: 300;
   text-align: center;
-  border: 1px solid #ebebeb;
+  border: 1px solid #BEA6CA;
 }
 
 form {
@@ -371,3 +377,25 @@ footer a:hover {
 
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) { }
+
+.note {
+    background-color: #f0f7fd;
+    border-color: #d0e3f0;
+}
+
+
+.warning {
+    background-color: #FD9797;
+    border-color: #FF2020;
+	padding: 5px;
+}
+
+.warning h4 {
+    color: yellow;
+}
+
+.todo {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+	padding: 5px;
+}
