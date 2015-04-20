@@ -1,0 +1,119 @@
+{{baseurl:/DBXTalk}}
+{{title: Installation}}
+
+!!Installation
+
+This article describes how to install the Garage database driver. Garage is a database driver with a generic interface supporting operations on relational databases. Concrete drivers will implement this API to to provide a coherent way to use RDBMS.
+
+!!!Getting the metacello configuration
+
+Garage is easily installable using metacello. The home of garage is the *DBXTalk repository in Smalltalkhub>http://www.smalltalkhub.com/#!/~DBXTalk/Garage*. You can download Garage's metacello configuration using a gofer script as follows
+
+[[[language=Smalltalk
+Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Garage';
+	configurationOf: 'Garage';
+	load.
+]]]
+
+
+!!!Installing a driver
+
+Once you have the metacello configuration you can load one of the available drivers or all of them, by specifying a particular load group
+
+[[[language=Smalltalk
+(ConfigurationOfGarage project version: #development)
+	load: loadGroup.
+
+"e.g., To download mysql"
+(ConfigurationOfGarage project version: #development)
+	load: 'mysql'.
+	
+"e.g., To download all drivers"
+(ConfigurationOfGarage project version: #development)
+	load.
+]]]
+
+The following table specifies which are the supported drivers for download, which are their load groups and which are their external dependencies:
+
+|!Driver		|!Load group		|!Driver id		|!Supports Connection to	|!External Dependency
+|Sqlite3		|sqlite3			|sqlite3		|Sqlite3					|sqlite library
+|PostgresV2		|psql or postgres	|postgresV2		|Postgres					|No
+|Mysql			|mysql				|mysql			|Mysql						|No
+|OpenDBX		|opendbx			|opendbx		|Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		|opendbx library
+
+!!!External dependencies
+
+Some drivers require the extra installation of external dependencies such as libraries. This is the case of e.g., the sqlite and the opendbx drivers. These libraries should be installed in your system and be reachable by the virtual machine executable by doing one of the following:
+
+- specifying the LD_LIBRARY_PATH environment for the virtual machine
+- installing the libraries in a globally visible directory (/usr/lib or System32)
+- installing the libraries in the same directory as the virtual machine
+- creating symlinks in a directory visible to the virtual machine pointing to the installed libraries
+
+@@TODO point to the download links of each particular library
+
+!!Checking my installation
+
+Once we installed our driver, we can check our installation by running the tests. However, we should well understand which are the drivers we installed and how to configure the tests in our machine setup.
+
+!!!Which are the drivers I have
+
+To know which are the available drivers you have, you can ask it to the driver class. The driver class will answer with the ids of the available drivers. Drivers are automatically subscribed to a driver manager when they are loaded.
+
+[[[language=Smalltalk
+GADriver availableDrivers.
+	" => #(#mysql #opendbx #sqlite3 #postgresv2)"
+]]]
+
+You can also ask it if a particular driver is available by providing it a database driver id. Database driver ids are case insensitive for the driver. Internally, they are all described by lowercase symbols, and will be transformed by the driver accordingly to that format when you query it with ids.
+
+[[[language=Smalltalk
+GADriver isAvailable: #mysql.
+	" => true"
+GADriver isAvailable: #MySQl.
+	" => true"
+]]]
+
+!!! Running the tests
+
+Garage already provides a set of tests that check the correctness of the driver and thus, your particular installation. To test your installation you should tell the driver where to find your database server and how to connect to it.
+
+@@Warning Garage tests will try to create a database named ''sodbxtest'' and many tables inside it to test. This should not be a problem but be careful if you intend to test your installation in a productive environment.
+
+Garage provides two ways to configure the tests to run. The first and simpler one is to override the method ""GADriverTest>>createFixture"". This method should return a fixture that the tests are going to use to run. The method as you download it is as follows:
+
+[[[language=Smalltalk
+GADriverTest>>createFixture
+
+	"You should implement this method as a user of garage to make the tests run on your database.
+	This method should return an instance of GADriverTestFixture with two connection strings:
+	 - setupConnectionString is the connection string used to create the initial database (if needed)
+	 - connection string is the connection string used to manipulate the created database.
+	
+	Examples can be found in class GAContinuousIntegrationConfiguration"
+	
+	self shouldBeImplemented
+	
+	"^ GADriverTestFixture 
+		setupConnectionString: SetupConnectionString
+		connectionString: ConnectionString"
+]]]
+
+To provide a test fixture you should uncomment the last three lines and set two connection strings: the setup connection string and the test connection string. The setup connection string will be used by the fixture to create and drop the ''sodbxtest'' database. The test connection string will connect to this database to perform the tests. A typical setup is as follows:
+
+[[language=Smalltalk
+GADriverTestFixture 
+	setupConnectionString: 'mysql://localhost:3306?user=sodbxtest&password=sodbxtest'
+	connectionString: 'mysql://localhost:3306/sodbxtest?user=sodbxtest&password=sodbxtest'
+]]
+
+Alternatively, you can also configure a test fixture without altering any methods, executing the following expression. If you use this option, make sure you version your scripts as they are not logged by default in version control systems and you make loose such information.
+
+[[language=Smalltalk
+GADriverTest fixture: (GADriverTestFixture 
+	setupConnectionString: 'mysql://localhost:3306?user=sodbxtest&password=sodbxtest'
+	connectionString: 'mysql://localhost:3306/sodbxtest?user=sodbxtest&password=sodbxtest').
+]]
+
+Then, running the tests should produce a set of all-green tests. If you want to compare with the latest version of Garage, you can check its status in its *CI job>https://ci.inria.fr/dbxtalk/view/Garage/*
