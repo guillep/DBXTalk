@@ -116,13 +116,3 @@ result := statement execute.
 [[[language=Smalltalk
 SELECT * FROM CATS WHERE name='lutz' OR owner='guille'
 ]]]
-
-!!!!Statement Options
-
-@@todo get auto generated keys
-
-@@todo query timeout
-
-
-@@todo how to see the result description (column names and types)
-@@todo table of database types
