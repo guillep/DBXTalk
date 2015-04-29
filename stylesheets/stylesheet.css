@@ -155,13 +155,16 @@ a.button span {
 #download-zip span {
   background: transparent url(../images/zip-icon.png) 12px 50% no-repeat;
 }
+#view-jenkins span {
+  background: transparent url(../images/jenkins.png) 12px 10% no-repeat;
+}
 #download-tar-gz span {
   background: transparent url(../images/tar-gz-icon.png) 12px 50% no-repeat;
 }
-#view-on-github span {
-  background: transparent url(../images/octocat-icon.png) 12px 50% no-repeat;
+#view-on-sthub span {
+  background: transparent url(../images/sthub.png) 12px 50% no-repeat;
 }
-#view-on-github {
+#view-jenkins {
   margin-right: 0;
 }
 
