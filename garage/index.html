@@ -1,67 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-    <meta charset='utf-8'>
+  <head>
     <title>Garage, the driver to rule them all</title>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/print.css" media="print">
-	<script src="/DBXTalk/highlight/highlight.pack.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+    <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  
   <body>
+
     <div class="container">
-    	<div class="inner">
-    	<header>
-		  <img src="/DBXTalk/images/dbxtalk.png" style="height:100px;float:left; margin-right: 10px" />
-          <h1>dbxtalk</h1>
-          <h2>Pharo Relational Database Suite</h2>
-        </header>
-    	
-    		<section id="downloads" class="clearfix">
-          <a href="https://github.com/guillep/DBXTalk/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/guillep/DBXTalk/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/guillep/DBXTalk" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-      	<h1>Garage</h1><a id="Garage"></a>
+      <h1>Garage</h1><a id="Garage"></a>
 <p>Garage is the relational database driver for the <a href="http://pharo-project.org/">Pharo</a> language. Garage provides with connection to the following databases:</p>
 <ul><li> Sqlite</li><li> Postgres</li><li> Mysql</li></ul>
 <h2>1. Getting Started</h2><a id="Getting Started"></a>
-<h3>1.1. <a href="installation.pillar.html">Installation</a></h3><a id="<a href="installation.pillar.html">Installation</a>"></a>
+<h3>1.1. <a href='installation.html'>Installation</a></h3><a id="<a href='installation.html'>Installation</a>"></a>
 <p>Installing Garage in many flavors. How to specify the driver you want and test your installation.</p>
-<h3>1.2. <a href="getting_started.pillar.html">Basic Usage</a></h3><a id="<a href="getting_started.pillar.html">Basic Usage</a>"></a>
+<h3>1.2. <a href='getting_started.html'>Basic Usage</a></h3><a id="<a href='getting_started.html'>Basic Usage</a>"></a>
 <p>Introduction to Garage. How to connect to a database and execute a query.</p>
-<h3>1.3. <a href="querying.pillar.html">Queries</a></h3><a id="<a href="querying.pillar.html">Queries</a>"></a>
+<h3>1.3. <a href='querying.html'>Queries</a></h3><a id="<a href='querying.html'>Queries</a>"></a>
 <p>Different queries and statements: SELECT, UPDATE, INSERT, DELETE, CREATE. How to iterate the results of your query using a resultset and a <em>cursored</em> like API with streams.</p>
-<h3>1.4. <a href="transactions.pillar.html">Transactions</a></h3><a id="<a href="transactions.pillar.html">Transactions</a>"></a>
+<h3>1.4. <a href='transactions.html'>Transactions</a></h3><a id="<a href='transactions.html'>Transactions</a>"></a>
 <p>Transactions in the Garage. Start, commit, and rollback transactions. Set autocommit on and off.</p>
-<h3>1.5. <a href="prepared_statements.pillar.html">Prepared Statements</a></h3><a id="<a href="prepared_statements.pillar.html">Prepared Statements</a>"></a>
+<h3>1.5. <a href='prepared_statements.html'>Prepared Statements</a></h3><a id="<a href='prepared_statements.html'>Prepared Statements</a>"></a>
 <p>Customizing queries using statement objects. How to prepare statements.</p>
-<h3>1.6. <a href="cursored_fetch.pillar.html">Cursored Fetches</a></h3><a id="<a href="cursored_fetch.pillar.html">Cursored Fetches</a>"></a>
+<h3>1.6. <a href='cursored_fetch.html'>Cursored Fetches</a></h3><a id="<a href='cursored_fetch.html'>Cursored Fetches</a>"></a>
 <p>How to perform cursored fetches with Garage.</p>
 <h2>2. Wishlist</h2><a id="Wishlist"></a>
 <p>These are the features we would like to include in Garage for following releases.</p>
 <ul><li> more drivers!</li><li> benchmarks</li><li> distribured transactions</li><li> transaction isolation levels</li></ul>
-      	</section>
-		<footer>
-          Dbxtalk is maintained by <a href="https://github.com/guillep">guillep</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    
   </body>
 </html>
