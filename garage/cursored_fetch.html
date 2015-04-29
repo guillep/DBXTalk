@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset='utf-8'>
+    <title>Cursored Fetches</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/print.css" media="print">
+	<script src="/DBXTalk/highlight/highlight.pack.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <div class="container">
+    	<div class="inner">
+    	<header>
+		  <img src="/DBXTalk/images/dbxtalk.png" style="height:100px;float:left; margin-right: 10px" />
+          <h1>dbxtalk</h1>
+          <h2>Pharo Relational Database Suite</h2>
+        </header>
+    	
+    		<section id="downloads" class="clearfix">
+          <a href="https://github.com/guillep/DBXTalk/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/guillep/DBXTalk/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/guillep/DBXTalk" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+      	
+<h2>1. Cursored Fetches</h2><a id="Cursored Fetches"></a>
+<p>Some Garage drivers supports cursored fetches from the databse. That is, they will retrieve the results of a query in chunks of rows instead of reading all of them at once. This ability is important when we work with big amounts of data. Using cursored fetches will limit the amount of memory used and will allow us to manage the network throughput.</p>
+<p>Notice that not all Garage drivers support this feature. You can ask a connection if it supports cursored fetches by sending it the <strong>supportsCursoredFetch</strong> message. Take into account that a driver that does not support cursored fetches will fail will an exception when trying to do so.</p>
+<p><figure><pre><code class="Smalltalk">connection supportsCursoredFetch.</code></pre><figcaption></figcaption></figure></p>
+<p>Cursored fetches can be configured in a per-statement basis, by specifying the <strong>fetchSize:</strong>. Then a statement can be executed as usual using the <strong>execute</strong> message, which will retrieve a result set object as a normal statement.</p>
+<p><figure><pre><code class="Smalltalk">statement := connnection createStatement: 'SELECT code, name, observations FROM signature'.
+
+&quot;We fetch 20 rows at a time&quot;
+statement fetchSize: 20.
+
+resultSet := statement execute.</code></pre><figcaption></figcaption></figure></p>
+<p>A result set created with a fetch size will retrieve <u>N</u> rows lazily, where <u>N</u> is the fetch size. If we ask for <u>N</u> rows to the result set it will do only one round trip to the database. If we ask for <u>N + 1</u> it will do two roundtrips, and bring <u>2 * N</u> rows. It we ask for all the rows of the resultset with the <strong>rows</strong> message, it will perform as many roundtrips it needs to bring all the rows in packs of <u>N</u>, so this feature should be used carefully. The best way to use this cursored fetches is through the result set read stream.</p>
+<p><figure><pre><code class="Smalltalk">&quot;We fetch 20 rows at a time&quot;
+statement fetchSize: 20.
+
+resultSet := statement execute.
+readStream := resultSet readStream.
+
+readStream next: 20. &quot;will perform one trip&quot;
+
+readStream next: 21. &quot;will perform two trips&quot;
+readStream next: 40. &quot;will perform two trips also&quot;
+
+
+readStream next: 5; next:5; next: 10. &quot;will perform only one trip to bring the 20 rows&quot;</code></pre><figcaption></figcaption></figure></p>
+
+<h2>2. Driver subtleties</h2><a id="Driver subtleties"></a>
+<p>Garage provides only a common interface to perform cursored fetches. Each driver will implement its own features differently. In this section we discuss what is the expected behavior of the exceptional cases.</p>
+<p>Drivers that not supporting cursored fetches will fail with an exception at the moment of configuring the fetch size.</p>
+<p><figure><pre><code class="Smalltalk">statement fetchSize: 20.
+	&quot;=&gt; Exception!&quot;</code></pre><figcaption></figcaption></figure></p>
+<p>Some Garage drivers, such as the Postgresql one, requires to perform cursored fetches in a transaction. In such case, a transaction should be created before the execution of the statement.</p>
+<p><figure><pre><code class="Smalltalk">connection beginTransaction.
+connection createStatement: '...'.
+statement fetchSize: 20.
+result := statement execute.</code></pre><figcaption></figcaption></figure></p>
+      	</section>
+		<footer>
+          Dbxtalk is maintained by <a href="https://github.com/guillep">guillep</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </body>
+</html>

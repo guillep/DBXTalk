@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
     <meta charset='utf-8'>
-    <title>index.html</title>
+    <title>Managing Transactions</title>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="/DBXTalk/stylesheets/stylesheet.css" media="screen">
@@ -32,9 +32,20 @@
         <hr>
 
         <section id="main_content">
-      	<h1>Welcome to DBXTalk</h1><a id="Welcome to DBXTalk"></a>
-<p>DBXTalk is the relational database suite for the &lt;a href=&quot;http://pharo.org&quot;&gt;Pharo&lt;/a&gt; live programming language. DBXTalk is an umbrella for the following projects:&lt;/p&gt;</p>
-<ul><li> The DBXTalk database driver suite.</li><li> A SQL builder.</li><li> A database meta-data access.</li><li> The Glorp Object-Relational-Mapper for Pharo.</li></ul>
+      	
+
+<h2>1. Managing Transactions</h2><a id="Managing Transactions"></a>
+<p>Garage allows transactions management in a connection with manual transactions. Transactions are managed directly by the database server, by sending it the corresponding variant of the <strong>BEGIN</strong> command, so Garage does not perform any additional task on this topic.
+The basic usage of transactions is through manually starting and ending them with the <strong>beginTransaction</strong>, <strong>commitTransaction</strong> and <strong>rollbackTransaction</strong> messages.</p>
+<p><figure><pre><code class="Smalltalk">[ connection beginTransaction.
+
+connection execute: 'INSERT INTO CATS(name, owner) VALUES('lutz', 'guille')'.
+
+connection commitTransaction ] on: Error do: [ connection rollbackTransaction ].</code></pre><figcaption></figcaption></figure></p>
+<p>Notice also that Garage does not provide <u>per-se</u> nested transactions as not all database vendors provide them. This means that some particular driver may implement this support but Garage does not guarantee it.</p>
+<p>Garage also provides the ability to query if the current connection supports autocommit or not. Changing it is not supported as it is not a globally available feature in different databases. Instead, most databases start with <strong>autocommit ON</strong> and suggest the user to start explicit transactions to avoid autocommits. We also recommend the usage of transactions, and specific SQL for specific cases.</p>
+
+<p><figure><pre><code class="Smalltalk">connection hasAutoCommit.</code></pre><figcaption></figcaption></figure></p>
       	</section>
 		<footer>
           Dbxtalk is maintained by <a href="https://github.com/guillep">guillep</a><br>

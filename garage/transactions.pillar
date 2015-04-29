@@ -1,0 +1,25 @@
+{{baseurl:/DBXTalk}}
+{{title: Managing Transactions}}
+
+
+!!Managing Transactions
+
+Garage allows transactions management in a connection with manual transactions. Transactions are managed directly by the database server, by sending it the corresponding variant of the ""BEGIN"" command, so Garage does not perform any additional task on this topic.
+The basic usage of transactions is through manually starting and ending them with the ""beginTransaction"", ""commitTransaction"" and ""rollbackTransaction"" messages.
+
+[[[language=Smalltalk
+[ connection beginTransaction.
+
+connection execute: 'INSERT INTO CATS(name, owner) VALUES('lutz', 'guille')'.
+
+connection commitTransaction ] on: Error do: [ connection rollbackTransaction ].
+]]]
+
+Notice also that Garage does not provide __per-se__ nested transactions as not all database vendors provide them. This means that some particular driver may implement this support but Garage does not guarantee it.
+
+Garage also provides the ability to query if the current connection supports autocommit or not. Changing it is not supported as it is not a globally available feature in different databases. Instead, most databases start with ""autocommit ON"" and suggest the user to start explicit transactions to avoid autocommits. We also recommend the usage of transactions, and specific SQL for specific cases.
+
+
+[[[language=Smalltalk
+connection hasAutoCommit.
+]]]

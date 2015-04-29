@@ -22,19 +22,23 @@ Introduction to Garage. How to connect to a database and execute a query.
 
 Different queries and statements: SELECT, UPDATE, INSERT, DELETE, CREATE. How to iterate the results of your query using a resultset and a ''cursored'' like API with streams.
 
-!!!{{{html:<a href="statements.pillar.html">Statements</a>}}}
+!!!{{{html:<a href="transactions.pillar.html">Transactions</a>}}}
+
+Transactions in the Garage. Start, commit, and rollback transactions. Set autocommit on and off.
+
+!!!{{{html:<a href="prepared_statements.pillar.html">Prepared Statements</a>}}}
 
 Customizing queries using statement objects. How to prepare statements.
 
-!!!{{{html:<a href="transactions.pillar.html">Transactions</a>}}}
+!!!{{{html:<a href="cursored_fetch.pillar.html">Cursored Fetches</a>}}}
 
-Transactions in the Garage.
-
-!!!{{{html:<a href="advanced.pillar.html">Advanced</a>}}}
-
-To come...
+How to perform cursored fetches with Garage.
 
 !!Wishlist
 
-- distribured transactions
+These are the features we would like to include in Garage for following releases.
+
 - more drivers!
+- benchmarks
+- distribured transactions
+- transaction isolation levels

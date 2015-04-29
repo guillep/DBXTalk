@@ -33,7 +33,7 @@
 
         <section id="main_content">
       	
-<h2>1. Statement Objects</h2>
+<h2>1. Statement Objects</h2><a id="Statement Objects"></a>
 <p>Statement objects support fine-grained control over statements sent to a database. We can create a statement object by sending the <strong>createStatement:</strong> message to a connection object with a SQL statement string, or the <strong>createStatement</strong> and then configuring the statement with the <strong>statementString:</strong> message.</p>
 <p><figure><pre><code class="Smalltalk">aStatement := connection createStatement: 'CREATE TABLE CATS (
 	name varchar(50),
@@ -51,7 +51,7 @@ result do: [ ... ].
 &quot;we can execute it again and obtain the same results&quot;
 aStatement execute do: [ ... ].</code></pre><figcaption></figcaption></figure></p>
 
-<h2>2. Prepared Statements</h2>
+<h2>2. Prepared Statements</h2><a id="Prepared Statements"></a>
 <p>Some drivers support <strong>prepared</strong> statements. A prepared statement is a statement that is sent to the database to pre-process it. The database server can pre-parse it, cache results or even pre-calculate how it will execute the query. A prepared statement can be created by sending the <strong>prepare:</strong> message to a connection with a SQL statement string, or by sending the <strong>prepare</strong> message to an already existing statement.</p>
 <p><figure><pre><code class="Smalltalk">preparedStatement := connection prepare: 'SELECT * FROM CATS'.
 
@@ -62,7 +62,7 @@ anotherPreparedStatement prepare.</code></pre><figcaption></figcaption></figure>
 	ifTrue: [ ... ]
 	ifFalse: [ ... ]</code></pre><figcaption></figcaption></figure></p>
 <p class="todo"><strong>TODO:</strong> provide a table with the drivers that support it. Also table of what kind of statements can be prepared by database</p><p class="todo">ask the database which kind of statements it supports for preparation</p>
-<h4>2.0.1. Sanitizing SQL</h4>
+<h4>2.0.1. Sanitizing SQL</h4><a id="Sanitizing SQL"></a>
 <p>Composing strings to create a SQL statement can be cumbersome but also an unsafe way of creating a query. Attackers may benefit from wrongly sanitized SQL to perform SQL injection: the injection of SQL attacks inside a query. For example, considering the following SELECT query</p>
 <p><figure><pre><code class="SQL">SELECT * FROM TABLE WHERE name=&lt;some param&gt;</code></pre><figcaption></figcaption></figure></p>
 <p>If we naively concatenate it with the string we receive as an argument from a user, the user could be able to inject a DROP TABLE script like this:</p>

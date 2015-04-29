@@ -1,0 +1,62 @@
+{{baseurl:/DBXTalk}}
+{{title: Cursored Fetches}}
+
+!!Cursored Fetches
+
+Some Garage drivers supports cursored fetches from the databse. That is, they will retrieve the results of a query in chunks of rows instead of reading all of them at once. This ability is important when we work with big amounts of data. Using cursored fetches will limit the amount of memory used and will allow us to manage the network throughput.
+
+Notice that not all Garage drivers support this feature. You can ask a connection if it supports cursored fetches by sending it the ""supportsCursoredFetch"" message. Take into account that a driver that does not support cursored fetches will fail will an exception when trying to do so.
+
+[[[language=Smalltalk
+connection supportsCursoredFetch.
+]]]
+
+Cursored fetches can be configured in a per-statement basis, by specifying the ""fetchSize:"". Then a statement can be executed as usual using the ""execute"" message, which will retrieve a result set object as a normal statement.
+
+[[[language=Smalltalk
+statement := connnection createStatement: 'SELECT code, name, observations FROM signature'.
+
+"We fetch 20 rows at a time"
+statement fetchSize: 20.
+
+resultSet := statement execute.
+]]]
+
+A result set created with a fetch size will retrieve __N__ rows lazily, where __N__ is the fetch size. If we ask for __N__ rows to the result set it will do only one round trip to the database. If we ask for __N + 1__ it will do two roundtrips, and bring __2 * N__ rows. It we ask for all the rows of the resultset with the ""rows"" message, it will perform as many roundtrips it needs to bring all the rows in packs of __N__, so this feature should be used carefully. The best way to use this cursored fetches is through the result set read stream.
+
+[[[language=Smalltalk
+"We fetch 20 rows at a time"
+statement fetchSize: 20.
+
+resultSet := statement execute.
+readStream := resultSet readStream.
+
+readStream next: 20. "will perform one trip"
+
+readStream next: 21. "will perform two trips"
+readStream next: 40. "will perform two trips also"
+
+
+readStream next: 5; next:5; next: 10. "will perform only one trip to bring the 20 rows"
+]]]
+
+
+!!Driver subtleties
+
+Garage provides only a common interface to perform cursored fetches. Each driver will implement its own features differently. In this section we discuss what is the expected behavior of the exceptional cases.
+
+Drivers that not supporting cursored fetches will fail with an exception at the moment of configuring the fetch size.
+
+[[[language=Smalltalk
+statement fetchSize: 20.
+	"=> Exception!"
+]]]
+
+Some Garage drivers, such as the Postgresql one, requires to perform cursored fetches in a transaction. In such case, a transaction should be created before the execution of the statement.
+
+[[[language=Smalltalk
+connection beginTransaction.
+connection createStatement: '...'.
+statement fetchSize: 20.
+result := statement execute.
+]]]

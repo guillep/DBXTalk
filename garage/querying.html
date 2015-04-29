@@ -33,7 +33,7 @@
 
         <section id="main_content">
       	
-<h2>1. Executing queries</h2>
+<h2>1. Executing queries</h2><a id="Executing queries"></a>
 <p>With Garage, the simplest way to execute a SQL query is by sending the message <strong>execute:</strong> to a connection object. The message <strong>execute:</strong> accepts <strong>any</strong> kind of statements, from SELECT and INSERT queries to CREATE TABLE or CREATE FOREIGN KEY statements.</p>
 <p><figure><pre><code class="Smalltalk">connection execute: 'CREATE TABLE CATS (
 	name varchar(50),
@@ -42,7 +42,7 @@
 connection execute: 'SELECT * FROM CATS'.</code></pre><figcaption></figcaption></figure></p>
 <p>Using the <strong>execute:</strong> message, the driver will immediately sent the query to the database and interpret the results. If there is a syntax error in the query, the operation will fail with an exception indicating where such error was produced.</p>
 
-<h3>1.1. Statement results</h3>
+<h3>1.1. Statement results</h3><a id="Statement results"></a>
 <p>Executing a statements such as INSERT, UPDATE or CREATE TABLE does not return a set of rows as a result. Instead they notify the number of affected rows in the database. We can access the number of affected rows of a result by sending it the <strong>rowsAffected</strong> message. However, the value returned by <strong>rowsAffected</strong> will vary between different database servers. For example, generally database servers return the number of rows that result from the <strong>WHERE</strong> clause. However, MySQL only counts the rows whose values have effectively changed. To know if a driver returns the number of really changed rows as affected rows, they understand the <strong>affectsOnlyChangedRows</strong> message.</p>
 <p><figure><pre><code class="Smalltalk">mysqlConnection affectsOnlyChangedRows. &quot;=&gt; true&quot;
 pgsqlConnection affectsOnlyChangedRows. &quot;=&gt; false&quot;</code></pre><figcaption></figcaption></figure></p>
@@ -66,7 +66,7 @@ self assert: result affectedRows = 2.
 result := connection execute: 'DELETE FROM CATS WHERE name=''lutz'''.
 self assert: result affectedRows = 1.</code></pre><figcaption></figcaption></figure></p>
 
-<h3>1.2. Iterating Rows</h3>
+<h3>1.2. Iterating Rows</h3><a id="Iterating Rows"></a>
 <p>Differently from the statements we have already seen, SELECT statements return a set of rows as a result, namely a <strong>result set</strong>. A Garage result set behaves almost as an sequenceable collection of rows. It provides, for example, the usual Pharo's iteration methods such as <strong>do:</strong>, <strong>collect:</strong> and <strong>select:</strong>.</p>
 <p class="info"><strong>INFO:</strong> Notice that a normal SELECT statement executed through the <strong>execute:</strong> message brings all results at once. In a next article we will discuss the optimization of row retrieval.</p>
 <p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
@@ -87,7 +87,7 @@ stream := result readStream.
 ]</code></pre><figcaption></figcaption></figure></p>
 <p>Notice that a result set does not have a <strong>size</strong> method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.</p>
 <p class="todo"><strong>TODO:</strong> This is maybe implementable.</p>
-<h3>1.3. Accessing Row Values</h3>
+<h3>1.3. Accessing Row Values</h3><a id="Accessing Row Values"></a>
 <p>The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the <strong>atName:</strong> and <strong>atIndex:</strong> messages. Notice that the column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. </p>
 <p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
 catRow := result rows first.
