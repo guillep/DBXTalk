@@ -40,22 +40,22 @@ The following table specifies which are the supported drivers for download, whic
 |Sqlite3		|sqlite3			|sqlite3		|Sqlite3					|sqlite library
 |PostgresV2		|psql or postgres	|postgresV2		|Postgres					|No
 |Mysql			|mysql				|mysql			|Mysql						|No
-|OpenDBX		|opendbx			|opendbx		|Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		|opendbx library
+|OpenDBX		|opendbx			|opendbx		|Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		|opendbx library + client library
 
 !!!External dependencies
 
 Some drivers require the extra installation of external dependencies such as libraries. This is the case of e.g., the sqlite and the opendbx drivers. These libraries should be installed in your system and be reachable by the virtual machine executable by doing one of the following:
 
-- specifying the LD_LIBRARY_PATH environment for the virtual machine
-- installing the libraries in a globally visible directory (/usr/lib or System32)
-- installing the libraries in the same directory as the virtual machine
-- creating symlinks in a directory visible to the virtual machine pointing to the installed libraries
+- Installing the libraries in the same directory than the virtual machine
+- In Unix like systems, specifying the LD_LIBRARY_PATH environment for the virtual machine
+- In Unix like systems, creating symlinks in a directory visible to the virtual machine pointing to the installed libraries
+- Installing the libraries in a globally visible directory (/usr/lib for Unix like systems or System32 in Windowz)
 
 @@todo ""TODO:"" point to the download links of each particular library
 
 !!Checking my installation
 
-Once we installed our driver, we can check our installation by running the tests. However, we should well understand which are the drivers we installed and how to configure the tests in our machine setup.
+Once we installed our driver, we can check our installation by running the tests. However, we should understand which are the drivers we installed and how to configure the tests in our machine setup.
 
 !!!Which are the drivers I have
 
