@@ -44,21 +44,8 @@
 <ul><li> the schema (http, ftp, etc.) is the database driver id (we will talk about it later). In this example our schema is mysql.</li><li> host, port and database are the address of your database server</li><li> the query-string allows us to put additional information such as connection credentials. the key <strong>user</strong> is followed by the database user to login and the key <strong>password</strong> by its password.</li></ul>
 <pre>driver://host:port/database?key=value&amp;key2=value2</pre>
 
-
-<h3>1.2. Which are the drivers I have</h3><a id="Which are the drivers I have"></a>
-
-<p>When we try to create a database connection with a driver that does not exist or we did not load yet, we will have an exception saying so.</p>
-<p><figure><pre><code class="Smalltalk">GADriver fromConnectionString:
-	'unexistent://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest'</code></pre><figcaption></figcaption></figure></p>
-<p>To know which are the available drivers you have, you can ask it to the driver class. The driver class will answer with the ids of the available drivers. Drivers are automatically subscribed to a driver manager when they are loaded.</p>
-<p><figure><pre><code class="Smalltalk">GADriver availableDrivers.
-	&quot; =&gt; #(#mysql #opendbx #sqlite3 #postgresv2)&quot;</code></pre><figcaption></figcaption></figure></p>
-<p>You can also ask it if a particular driver is available by providing it a database driver id. Database driver ids are case insensitive for the driver. Internally, they are all described by lowercase symbols, and will be transformed by the driver accordingly to that format when you query it with ids.</p>
-<p><figure><pre><code class="Smalltalk">GADriver isAvailable: #mysql.
-	&quot; =&gt; true&quot;
-GADriver isAvailable: #MySQl.
-	&quot; =&gt; true&quot;</code></pre><figcaption></figcaption></figure></p>
-<h3>1.3. Stablishing connection</h3><a id="Stablishing connection"></a>
+<p class="info"><strong>Which are the drivers I have?</strong> To know which are the available drivers you have, you can ask it to the driver class using the #availableDrivers message. For further information, check the <a href='installation.html'>installation page</a>.</p>
+<h3>1.2. Stablishing connection</h3><a id="Stablishing connection"></a>
 <p>Initially and to avoid surprises, a database connection is not connected to the database. You can check if a connection is connected at any time during the life of the connection using the isConnected message.</p>
 <p><figure><pre><code class="Smalltalk">connection isConnected.
 	&quot; =&gt; true/false&quot;</code></pre><figcaption></figcaption></figure></p>
@@ -67,16 +54,16 @@ GADriver isAvailable: #MySQl.
 <p>However, for those users that do not need to set manually parameters, he can use a shortcut that creates the connection and connects it in only one step.</p>
 <p><figure><pre><code class="Smalltalk">connection := GADriver connectToConnectionString: 
 	'mysql://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest'.</code></pre><figcaption></figcaption></figure></p>
-<h3>1.4. Sending a Query</h3><a id="Sending a Query"></a>
+<h3>1.3. Sending a Query</h3><a id="Sending a Query"></a>
 <p>Once a connection is available, we can send queries and statements to it for their execution. Here we will only see a simple query, using the execute message. We will describe in details how queries and their results are managed later.</p>
 <p><figure><pre><code class="Smalltalk">connection execute: 'CREATE TABLE CATS (
 	name varchar(50),
 	owner varchar(50))'.
 
 connection execute: 'SELECT * FROM CATS'.</code></pre><figcaption></figcaption></figure></p>
-<p>Executing a correct query will return an accoding result: a select query will answer a result with rows, other statements will return a result with a summary of the action they did (e.g., an insert or update will return the amount of modified rows). Executing a wrong query will throw an exception explaining the problem. For example, a query with incorrect syntax will fail and tell us where is the syntax problem; querying an unexistent table will throw an error saying so. We will dive later into the expected kind of results.</p>
+<p>Executing a correct query will return an according result: a select query will answer a result with rows, other statements will return a result with a summary of the action they did (e.g., an insert or update will return the amount of modified rows). Executing a wrong query will throw an exception explaining the problem. For example, a query with incorrect syntax will fail and tell us where is the syntax problem; querying an unexistent table will throw an error saying so. We will dive later into the expected kind of results.</p>
 
-<h3>1.5. Closing the connection</h3><a id="Closing the connection"></a>
+<h3>1.4. Closing the connection</h3><a id="Closing the connection"></a>
 <p>Database servers allow a limited number of simultaneous connections. If too many connections are open the server will start refusing new connections. To avoid these problems we have to close unused connections. Closing an unused connection will free used resources both in our Pharo image and in the database server. We can close manually a database connection by sending it the close message.</p>
 <p><figure><pre><code class="Smalltalk">connection close.</code></pre><figcaption></figcaption></figure></p>
 <p>Garage provides also the automatic closure of connections on garbage collection. That is, when a database connection object is being garbage collected, the connection will be automatically closed. To allow a database connection to be automatically collected, we must release all references to it. We must not keep references to a connection from any of our objects.</p>

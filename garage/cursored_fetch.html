@@ -35,7 +35,7 @@
         <section id="main_content">
       	
 <h2>1. Cursored Fetches</h2><a id="Cursored Fetches"></a>
-<p>Some Garage drivers supports cursored fetches from the databse. That is, they will retrieve the results of a query in chunks of rows instead of reading all of them at once. This ability is important when we work with big amounts of data. Using cursored fetches will limit the amount of memory used and will allow us to manage the network throughput.</p>
+<p>Some Garage drivers supports cursored fetches from the database. That is, they will retrieve the results of a query in chunks of rows instead of reading all of them at once. This ability is important when we work with big amounts of data. Using cursored fetches will limit the amount of memory used and will allow us to manage the network throughput.</p>
 <p>Notice that not all Garage drivers support this feature. You can ask a connection if it supports cursored fetches by sending it the <strong>supportsCursoredFetch</strong> message. Take into account that a driver that does not support cursored fetches will fail will an exception when trying to do so.</p>
 <p><figure><pre><code class="Smalltalk">connection supportsCursoredFetch.</code></pre><figcaption></figcaption></figure></p>
 <p>Cursored fetches can be configured in a per-statement basis, by specifying the <strong>fetchSize:</strong>. Then a statement can be executed as usual using the <strong>execute</strong> message, which will retrieve a result set object as a normal statement.</p>

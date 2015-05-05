@@ -66,7 +66,7 @@ self assert: result affectedRows = 2.
 
 result := connection execute: 'DELETE FROM CATS WHERE name=''lutz'''.
 self assert: result affectedRows = 1.</code></pre><figcaption></figcaption></figure></p>
-
+<p class="info"><strong>Sql queries with arguments:</strong> The #execute: message receive as argument a single string. It does not accept SQL with parameters (e.g., specified with the interrogation mark '?'). The user of garage should then use <a href='prepared_statements.html'>prepared statements</a> when supported by the database driver, or string concatenation to build his queries. Regarding the latter, the #format: message of String may come in handy. Be careful also that manually concatenating strings may become a target for SQL injection.</p>
 <h3>1.2. Iterating Rows</h3><a id="Iterating Rows"></a>
 <p>Differently from the statements we have already seen, SELECT statements return a set of rows as a result, namely a <strong>result set</strong>. A Garage result set behaves almost as an sequenceable collection of rows. It provides, for example, the usual Pharo's iteration methods such as <strong>do:</strong>, <strong>collect:</strong> and <strong>select:</strong>.</p>
 <p class="info"><strong>INFO:</strong> Notice that a normal SELECT statement executed through the <strong>execute:</strong> message brings all results at once. In a next article we will discuss the optimization of row retrieval.</p>
@@ -86,10 +86,10 @@ stream := result readStream.
 [ next := stream next. next isNil ] whileFalse: [
    ...
 ]</code></pre><figcaption></figcaption></figure></p>
-<p>Notice that a result set does not have a <strong>size</strong> method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.</p>
+<p>A result set does not have a <strong>size</strong> method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.</p>
 <p class="todo"><strong>TODO:</strong> This is maybe implementable.</p>
 <h3>1.3. Accessing Row Values</h3><a id="Accessing Row Values"></a>
-<p>The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the <strong>atName:</strong> and <strong>atIndex:</strong> messages. Notice that the column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. </p>
+<p>The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the <strong>atName:</strong> and <strong>atIndex:</strong> messages. The column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. </p>
 <p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
 catRow := result rows first.
 
@@ -99,14 +99,12 @@ self assert: (catRow atName: 'owner') equals: 'julien'.
 self assert: (catRow atIndex: 1) equals: 'lutz'.
 self assert: (catRow atIndex: 2) equals: 'julien'.</code></pre><figcaption></figcaption></figure></p>
 
-<p>Notice that the results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type <strong>INTEGER</strong>, the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depend on the particular databases and its driver implementation.</p>
+<p>The results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type <strong>INTEGER</strong>, the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depend on the particular databases and its driver implementation.</p>
 <p><figure><pre><code class="Smalltalk">result := connection execute: 'SELECT COUNT(*) as count FROM CATS'.
 row := result rows first.
 
 self assert: (catRow atName: 'count') equals: 1.</code></pre><figcaption></figcaption></figure></p>
-
-
-
+<p class="todo">&quot;TODO:&quot; make a conversion table between types.</p>
 
 
 
