@@ -23,32 +23,7 @@ Connection strings are URL styled:
 = driver://host:port/database?key=value&key2=value2
 
 
-
-!!!Which are the drivers I have
-
-
-When we try to create a database connection with a driver that does not exist or we did not load yet, we will have an exception saying so.
-
-[[[language=Smalltalk
-GADriver fromConnectionString:
-	'unexistent://localhost:3306/sodbxtest?user=sodbxtest&password=sodbxtest'
-]]]
-
-To know which are the available drivers you have, you can ask it to the driver class. The driver class will answer with the ids of the available drivers. Drivers are automatically subscribed to a driver manager when they are loaded.
-
-[[[language=Smalltalk
-GADriver availableDrivers.
-	" => #(#mysql #opendbx #sqlite3 #postgresv2)"
-]]]
-
-You can also ask it if a particular driver is available by providing it a database driver id. Database driver ids are case insensitive for the driver. Internally, they are all described by lowercase symbols, and will be transformed by the driver accordingly to that format when you query it with ids.
-
-[[[language=Smalltalk
-GADriver isAvailable: #mysql.
-	" => true"
-GADriver isAvailable: #MySQl.
-	" => true"
-]]]
+@@info ""Which are the drivers I have?"" To know which are the available drivers you have, you can ask it to the driver class using the #availableDrivers message. For further information, check the {{{html:<a href='installation.html'>installation page</a>}}}.
 
 !!!Stablishing connection
 
@@ -84,7 +59,7 @@ connection execute: 'CREATE TABLE CATS (
 connection execute: 'SELECT * FROM CATS'.
 ]]]
 
-Executing a correct query will return an accoding result: a select query will answer a result with rows, other statements will return a result with a summary of the action they did (e.g., an insert or update will return the amount of modified rows). Executing a wrong query will throw an exception explaining the problem. For example, a query with incorrect syntax will fail and tell us where is the syntax problem; querying an unexistent table will throw an error saying so. We will dive later into the expected kind of results.
+Executing a correct query will return an according result: a select query will answer a result with rows, other statements will return a result with a summary of the action they did (e.g., an insert or update will return the amount of modified rows). Executing a wrong query will throw an exception explaining the problem. For example, a query with incorrect syntax will fail and tell us where is the syntax problem; querying an unexistent table will throw an error saying so. We will dive later into the expected kind of results.
 
 
 !!!Closing the connection
