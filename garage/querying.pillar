@@ -95,13 +95,13 @@ stream := result readStream.
 ]
 ]]]
 
-Notice that a result set does not have a ""size"" method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.
+A result set does not have a ""size"" method. This is made on purpose because we do not really know the size of the result in advance if the driver is accessing a result in a cursored way.
 
 @@todo ""TODO:"" This is maybe implementable.
 
 !!!Accessing Row Values
 
-The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the ""atName:"" and ""atIndex:"" messages. Notice that the column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. 
+The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the ""atName:"" and ""atIndex:"" messages. The column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. 
 
 [[[language=Smalltalk
 result := connection execute: 'SELECT name AS catname, owner FROM CATS'.
@@ -115,7 +115,7 @@ self assert: (catRow atIndex: 2) equals: 'julien'.
 ]]]
 
 
-Notice that the results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type ""INTEGER"", the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depend on the particular databases and its driver implementation.
+The results will be automatically transformed to Pharo objects by the driver. That is, if a column is of type ""INTEGER"", the driver will transform it to a corresponding Pharo Integer. The same happens with other database types such as dates or times. However, these conversions depend on the particular databases and its driver implementation.
 
 [[[language=Smalltalk
 result := connection execute: 'SELECT COUNT(*) as count FROM CATS'.
@@ -124,8 +124,7 @@ row := result rows first.
 self assert: (catRow atName: 'count') equals: 1.
 ]]]
 
-
-
+@@todo "TODO:" make a conversion table between types.
 
 
 
