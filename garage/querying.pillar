@@ -60,6 +60,7 @@ result := connection execute: 'DELETE FROM CATS WHERE name=''lutz'''.
 self assert: result affectedRows = 1.
 ]]]
 
+@@info ""Sql queries with arguments:"" The #execute: message receive as argument a single string. It does not accept SQL with parameters (e.g., specified with the interrogation mark '?'). The user of garage should then use {{{html:<a href='prepared_statements.html'>prepared statements</a>}}} when supported by the database driver, or string concatenation to build his queries. Regarding the latter, the #format: message of String may come in handy. Be careful also that manually concatenating strings may become a target for SQL injection.
 
 !!!Iterating Rows
 
