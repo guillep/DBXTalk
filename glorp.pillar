@@ -1,0 +1,33 @@
+{{baseurl:/DBXTalk}}
+{{title:Glorp}}
+!Glorp
+
+Glorp is the Object-Relational-Mapper for Smalltalk. More on glorp will be added in the future.
+
+The current version is not adapted yet with garage. Glorp adaptors exist for Postgres and OpenDBX (in their corresponding groups in the configuration download), {{{html:<a href="http://www.smalltalkhub.com/#!/~PharoExtras/NBSQLite3">Sqlite3</a>}}} and {{{html:<a href="http://smalltalkhub.com/#!/~ThomasHeniart/GlorpDriverMySQL">Mysql</a>}}}.
+
+!!Installation
+
+Evaluating the following script loads the stable version of glorp.
+
+[[[language=Smalltalk
+Gofer it
+  squeaksource: 'MetacelloRepository';
+  package: 'ConfigurationOfGlorpDBX';
+  load.
+(((Smalltalk at: #ConfigurationOfGlorpDBX)
+    perform: #project)
+    perform: #version: with: #stable)
+        load
+]]]
+
+!!Documentation
+
+The following list of resources explain the basics of glorp.
+
+- {{{html:<a href="/_downloads/Glorp-Demo-AlanKnight.pdf">Glorp demo - Alan Knight - ppt</a>}}}
+- {{{html:<a href="/_downloads/Glorp-SeasideTutorial.pdf">Glorp tutorial for persistence in Seaside</a>}}}
+- {{{html:<a href="/_downloads/Glorp-ShortPaper-AlanKnight.pdf">Glorp short paper - Alan Knight</a>}}}
+- {{{html:<a href="/_downloads/Glorp-Tutorial-Cincom.pdf">Glorp tutorial slides - Alan Knight - pdf</a>}}}
+- {{{html:<a href="/_downloads/Glorp-Tutorial-RogerWhitney.pdf">Glorp tutorial - Roger Whitney</a>}}}
+- {{{html:<a href="/_downloads/Glorp-UserGuide-NevinPrattAlanKnight.pdf">Glorp User Guide - Nevin Pratt and Alan Knight</a>}}}
