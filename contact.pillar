@@ -1,0 +1,14 @@
+{{baseurl:/DBXTalk}}
+{{title:Contact}}
+!Contact
+
+You can ask questions, report bugs, give feedbacks and anything you want using our mailing lists. We will also publish our work and releases. You can join here:
+
+- {{{html:<a href="http://groups.google.com/group/dbxtalk/">dbxtalk mailing list</a>}}}: questions regarding dbxtalk in general
+- {{{html:<a href="http://groups.google.com/group/glorp-group/">glorp mailing list</a>}}}: questions regarding to glorp
+- {{{html:<a href="http://lists.pharo.org/mailman/listinfo/pharo-users_lists.pharo.org">pharo users mailing list</a>}}}: questions regarding the usage of Pharo
+
+!Nabble forums access
+
+You can also access dbxtalk's mailing list from the {{{html:<a href="http://forum.world.st/DBXTalk-f3718169.html">Nabble</a>}}} forum.
+When using nabble forums, ensure that you are also subscribed to the mailing list. If not your posts will not be forwarded and we will not see them.
