@@ -1,0 +1,22 @@
+{{baseurl:/DBXTalk}}
+{{title:Contribute}}
+
+!Code Repository
+
+The code of the dbxtalk project is hosted in {{{html:<a href="http://www.smalltalkhub.com/#!/~DBXTalk">SmalltalkHub</a>}}}, under the DBXTalk group. If you would like to have write access to the repository, do not hesitate to contact us.
+
+@@info ""Github?"" We are also planning to migrate soon our source code to {{{html:<a href="http://www.github.com">GitHub</a>}}}. If you are willing to help us migrate, please leave an email!
+
+!Jenkins CI
+
+The projects under the dbxtalk umbrella are automatically tested every day by a {{{html:<a href="https://ci.inria.fr/dbxtalk/view/Garage/">Jenkins continuous integration service</a>}}}. We thank inria for the provided service. If you would like to have write access to the ci infrastructure, do not hesitate to contact us.
+
+@@info ""Github?"" We are also planning to migrate soon our source code to {{{html:<a href="http://www.github.com">GitHub</a>}}}. If you are willing to help us migrate, please leave an email!
+
+!Issue Tracker
+
+@@warning ""ToDo:"" an issue tracker, the one from google code will die.
+
+!Backlog & Wishlist
+
+We have a public {{{html:<a href="https://trello.com/b/XUfCrpuT">trello board</a>}}} to keep the list of tasks and the backlog of the project. Do not hesistate to contact us to have write access to the backlog.
