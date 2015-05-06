@@ -1,0 +1,19 @@
+{{baseurl:/DBXTalk}}
+{{title:Garage}}
+{{subtitle:Supported drivers}}
+!Supported drivers
+
+Along with Garage, we provide implementations to several database drivers. Garage includes for the moment drivers for:
+
+- Sqlite3
+- Postgres V2
+- Mysql
+- OpenDBX
+
+The following table explains for each of these drivers: which is the load group in the metacello configuration, the driver id to put in the connection string, which are the databases it allows to connect to, and if it has an external dependency.
+
+|!Driver		|!Load group		|!Driver id		|!Supports Connection to	|!External Dependency
+|Sqlite3		|sqlite3			|sqlite3		|Sqlite3					|sqlite library
+|PostgresV2		|psql or postgres	|postgresV2		|Postgres					|No
+|Mysql			|mysql				|mysql			|Mysql						|No
+|OpenDBX		|opendbx			|opendbx		|Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		|opendbx library + client library

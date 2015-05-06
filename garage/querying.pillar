@@ -1,7 +1,8 @@
 {{baseurl:/DBXTalk}}
-{{title: More on Queries}}
+{{title:Garage}}
+{{subtitle: More on Queries}}
 
-!!Executing queries
+!Executing queries
 
 With Garage, the simplest way to execute a SQL query is by sending the message ""execute:"" to a connection object. The message ""execute:"" accepts ""any"" kind of statements, from SELECT and INSERT queries to CREATE TABLE or CREATE FOREIGN KEY statements.
 
@@ -16,7 +17,7 @@ connection execute: 'SELECT * FROM CATS'.
 Using the ""execute:"" message, the driver will immediately sent the query to the database and interpret the results. If there is a syntax error in the query, the operation will fail with an exception indicating where such error was produced.
 
 
-!!!Statement results
+!!Statement results
 
 Executing a statements such as INSERT, UPDATE or CREATE TABLE does not return a set of rows as a result. Instead they notify the number of affected rows in the database. We can access the number of affected rows of a result by sending it the ""rowsAffected"" message. However, the value returned by ""rowsAffected"" will vary between different database servers. For example, generally database servers return the number of rows that result from the ""WHERE"" clause. However, MySQL only counts the rows whose values have effectively changed. To know if a driver returns the number of really changed rows as affected rows, they understand the ""affectsOnlyChangedRows"" message.
 
@@ -60,9 +61,9 @@ result := connection execute: 'DELETE FROM CATS WHERE name=''lutz'''.
 self assert: result affectedRows = 1.
 ]]]
 
-@@info ""Sql queries with arguments:"" The #execute: message receive as argument a single string. It does not accept SQL with parameters (e.g., specified with the interrogation mark '?'). The user of garage should then use {{{html:<a href='prepared_statements.html'>prepared statements</a>}}} when supported by the database driver, or string concatenation to build his queries. Regarding the latter, the #format: message of String may come in handy. Be careful also that manually concatenating strings may become a target for SQL injection.
+@@info ""Sql queries with arguments:"" The #execute: message receives as argument a single string. It does not accept SQL with parameters (e.g., specified with the question mark '?'). The user of garage should then use {{{html:<a href='prepared_statements.html'>prepared statements</a>}}} when supported by the database driver, or string concatenation to build his queries. Regarding the latter, the #format: message of String may come in handy. Be careful also that manually concatenating strings may become a target for SQL injection.
 
-!!!Iterating Rows
+!!Iterating Rows
 
 Differently from the statements we have already seen, SELECT statements return a set of rows as a result, namely a ""result set"". A Garage result set behaves almost as an sequenceable collection of rows. It provides, for example, the usual Pharo's iteration methods such as ""do:"", ""collect:"" and ""select:"".
 
@@ -99,7 +100,7 @@ A result set does not have a ""size"" method. This is made on purpose because we
 
 @@todo ""TODO:"" This is maybe implementable.
 
-!!!Accessing Row Values
+!!Accessing Row Values
 
 The data in rows is organized in columns. We can access the data inside a row either by the name of the column or the index of the column using respectively the ""atName:"" and ""atIndex:"" messages. The column index and names are those specified in the query and not in the original table we are querying. For example, a query accessing only three columns from a table with four columns will only bring the three columns we asked for. The order in which those columns are retrieved is the order in which we asked for or the original order in the table if we didn't specify any. Also, if we put an alias into a column's name, we will only be able to access the column by the alias and not by it's original name. 
 

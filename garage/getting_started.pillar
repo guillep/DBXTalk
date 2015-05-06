@@ -1,11 +1,12 @@
 {{baseurl:/DBXTalk}}
-{{title: Garage Driver Phase One}}
+{{title:Garage}}
+{{subtitle:Getting started}}
 
-!!Entering the Garage
+!Entering the Garage
 
 This article describes the basics of the garage database driver. It covers its basic usage: creating connections, connecting and closing them, and executing SQL queries. Details and particular features are discussed in other related articles.
 
-!!!Getting a Connection
+!!Getting a Connection
 
 The Garage database driver supports the creation of a connection through connection strings.
 
@@ -25,7 +26,7 @@ Connection strings are URL styled:
 
 @@info ""Which are the drivers I have?"" To know which are the available drivers you have, you can ask it to the driver class using the #availableDrivers message. For further information, check the {{{html:<a href='installation.html'>installation page</a>}}}.
 
-!!!Stablishing connection
+!!Stablishing connection
 
 Initially and to avoid surprises, a database connection is not connected to the database. You can check if a connection is connected at any time during the life of the connection using the isConnected message.
 
@@ -47,7 +48,7 @@ connection := GADriver connectToConnectionString:
 	'mysql://localhost:3306/sodbxtest?user=sodbxtest&password=sodbxtest'.
 ]]]
 
-!!!Sending a Query
+!!Sending a Query
 
 Once a connection is available, we can send queries and statements to it for their execution. Here we will only see a simple query, using the execute message. We will describe in details how queries and their results are managed later.
 
@@ -62,7 +63,7 @@ connection execute: 'SELECT * FROM CATS'.
 Executing a correct query will return an according result: a select query will answer a result with rows, other statements will return a result with a summary of the action they did (e.g., an insert or update will return the amount of modified rows). Executing a wrong query will throw an exception explaining the problem. For example, a query with incorrect syntax will fail and tell us where is the syntax problem; querying an unexistent table will throw an error saying so. We will dive later into the expected kind of results.
 
 
-!!!Closing the connection
+!!Closing the connection
 
 Database servers allow a limited number of simultaneous connections. If too many connections are open the server will start refusing new connections. To avoid these problems we have to close unused connections. Closing an unused connection will free used resources both in our Pharo image and in the database server. We can close manually a database connection by sending it the close message.
 

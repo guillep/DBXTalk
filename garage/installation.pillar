@@ -1,11 +1,12 @@
 {{baseurl:/DBXTalk}}
-{{title: Installation}}
+{{title:Garage}}
+{{subtitle:Installation}}
 
-!!Installation
+!Installation
 
 This article describes how to install the Garage database driver. Garage is a database driver with a generic interface supporting operations on relational databases. Concrete drivers will implement this API to to provide a coherent way to use RDBMS.
 
-!!!Getting the metacello configuration
+!!Getting the metacello configuration
 
 Garage is easily installable using metacello. The home of garage is the *DBXTalk repository in Smalltalkhub>http://www.smalltalkhub.com/#!/~DBXTalk/Garage*. You can download Garage's metacello configuration using a gofer script as follows
 
@@ -17,7 +18,7 @@ Gofer it
 ]]]
 
 
-!!!Installing a driver
+!!Installing a driver
 
 Once you have the metacello configuration you can load one of the available drivers or all of them, by specifying a particular load group
 
@@ -42,7 +43,7 @@ The following table specifies which are the supported drivers for download, whic
 |Mysql			|mysql				|mysql			|Mysql						|No
 |OpenDBX		|opendbx			|opendbx		|Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		|opendbx library + client library
 
-!!!External dependencies
+!!External dependencies
 
 Some drivers require the extra installation of external dependencies such as libraries. This is the case of e.g., the sqlite and the opendbx drivers. These libraries should be installed in your system and be reachable by the virtual machine executable by doing one of the following:
 
@@ -53,11 +54,11 @@ Some drivers require the extra installation of external dependencies such as lib
 
 @@todo ""TODO:"" point to the download links of each particular library
 
-!!Checking my installation
+!Checking my installation
 
 Once we installed our driver, we can check our installation by running the tests. However, we should understand which are the drivers we installed and how to configure the tests in our machine setup.
 
-!!!Which are the drivers I have
+!!Which are the drivers I have
 
 To know which are the available drivers you have, you can ask it to the driver class. The driver class will answer with the ids of the available drivers. Drivers are automatically subscribed to a driver manager when they are loaded.
 
@@ -75,7 +76,7 @@ GADriver isAvailable: #MySQl.
 	" => true"
 ]]]
 
-!!! Running the tests
+!! Running the tests
 
 Garage already provides a set of tests that check the correctness of the driver and thus, your particular installation. To test your installation you should tell the driver where to find your database server and how to connect to it.
 

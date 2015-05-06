@@ -1,8 +1,9 @@
 {{baseurl:/DBXTalk}}
-{{title: Managing Transactions}}
+{{title:Garage}}
+{{subtitle:Managing Transactions}}
 
 
-!!Managing Transactions
+!Managing Transactions
 
 Garage allows transactions management in a connection with manual transactions. Transactions are managed directly by the database server, by sending it the corresponding variant of the ""BEGIN"" command, so Garage does not perform any additional task on this topic.
 The basic usage of transactions is through manually starting and ending them with the ""beginTransaction"", ""commitTransaction"" and ""rollbackTransaction"" messages.

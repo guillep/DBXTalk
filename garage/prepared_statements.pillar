@@ -1,7 +1,8 @@
 {{baseurl:/DBXTalk}}
-{{title: Using Statement Objects}}
+{{title:Garage}}
+{{subtitle:Statement Objects}}
 
-!!Statement Objects
+!Statement Objects
 
 Statement objects support fine-grained control over statements sent to a database. We can create a statement object by sending the ""createStatement:"" message to a connection object with a SQL statement string, or the ""createStatement"" and then configuring the statement with the ""statementString:"" message.
 
@@ -32,7 +33,7 @@ aStatement execute do: [ ... ].
 ]]]
 
 
-!!Prepared Statements
+!Prepared Statements
 
 Some drivers support ""prepared"" statements. A prepared statement is a statement that is sent to the database to pre-process it. The database server can pre-parse it, cache results or even pre-calculate how it will execute the query. A prepared statement can be created by sending the ""prepare:"" message to a connection with a SQL statement string, or by sending the ""prepare"" message to an already existing statement.
 
@@ -54,7 +55,7 @@ aConnection supportsPreparedStatements
 @@todo ""TODO:"" provide a table with the drivers that support it. Also table of what kind of statements can be prepared by database
 @@todo ask the database which kind of statements it supports for preparation
 
-!!!!Sanitizing SQL
+!!Sanitizing SQL
 
 Composing strings to create a SQL statement can be cumbersome but also an unsafe way of creating a query. Attackers may benefit from wrongly sanitized SQL to perform SQL injection: the injection of SQL attacks inside a query. For example, considering the following SELECT query
 
