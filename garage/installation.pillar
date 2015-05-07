@@ -39,7 +39,7 @@ The following table specifies which are the supported drivers for download, whic
 
 |!Driver		|!Load group		|!Driver id		|!Supports Connection to	|!External Dependency
 |Sqlite3		|sqlite3			|sqlite3		|Sqlite3					|sqlite library
-|PostgresV2		|psql or postgres	|postgresV2		|Postgres					|No
+|PostgresV2		|pgsqlV2 or postgresV2	|postgresV2		|Postgres					|No
 |Mysql			|mysql				|mysql			|Mysql						|No
 |OpenDBX		|opendbx			|opendbx		|Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		|opendbx library + client library
 
