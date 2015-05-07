@@ -23,15 +23,15 @@ Gofer it
 Once you have the metacello configuration you can load one of the available drivers or all of them, by specifying a particular load group
 
 [[[language=Smalltalk
-(ConfigurationOfGarage project version: #development)
+(ConfigurationOfGarage project version: '0.1')
 	load: loadGroup.
 
 "e.g., To download mysql"
-(ConfigurationOfGarage project version: #development)
+(ConfigurationOfGarage project version: '0.1')
 	load: 'mysql'.
 	
 "e.g., To download all drivers"
-(ConfigurationOfGarage project version: #development)
+(ConfigurationOfGarage project version: '0.1')
 	load.
 ]]]
 
