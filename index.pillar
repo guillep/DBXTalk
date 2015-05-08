@@ -1,6 +1,6 @@
 {{baseurl:/DBXTalk}}
 {{title:Home}}
-""dbxtalk"" is the relational database suite for the {{{html:<a href="http://pharo.org">Pharo</a>}}} programming language. That is, the set of tools, libraries and frameworks to connect to relational databases, usually known also as "SQL" databases. The dbxtalk suite is an umbrella for the following projects:
+""dbxtalk"" is the relational database suite for {{{html:<a href="http://pharo.org">Pharo</a>}}}. That is, the set of tools, libraries and frameworks to connect to relational databases, usually known also as "SQL" databases. The dbxtalk suite is an umbrella for the following projects:
 
 - {{{html:<a href="garage/index.html">Garage</a>}}}: the generic database driver API, with several driver implementations.
 - {{{html:<a href="glorp.html">Glorp</a>}}}: the Object-Relational-Mapper adapted to Pharo.
