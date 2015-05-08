@@ -222,18 +222,18 @@
 
 <h4>2. Installing a driver</h4><a id="Installing a driver"></a>
 <p>Once you have the metacello configuration you can load one of the available drivers or all of them, by specifying a particular load group</p>
-<p><figure><pre><code class="Smalltalk">(ConfigurationOfGarage project version: #development)
+<p><figure><pre><code class="Smalltalk">(ConfigurationOfGarage project version: '0.1')
 	load: loadGroup.
 
 &quot;e.g., To download mysql&quot;
-(ConfigurationOfGarage project version: #development)
+(ConfigurationOfGarage project version: '0.1')
 	load: 'mysql'.
 	
 &quot;e.g., To download all drivers&quot;
-(ConfigurationOfGarage project version: #development)
+(ConfigurationOfGarage project version: '0.1')
 	load.</code></pre><figcaption></figcaption></figure></p>
 <p>The following table specifies which are the supported drivers for download, which are their load groups and which are their external dependencies:</p>
-<table style="border: solid thin"><tr><th>Driver		</th><th>Load group		</th><th>Driver id		</th><th>Supports Connection to	</th><th>External Dependency</th></tr><tr><td>Sqlite3		</td><td>sqlite3			</td><td>sqlite3		</td><td>Sqlite3					</td><td>sqlite library</td></tr><tr><td>PostgresV2		</td><td>psql or postgres	</td><td>postgresV2		</td><td>Postgres					</td><td>No</td></tr><tr><td>Mysql			</td><td>mysql				</td><td>mysql			</td><td>Mysql						</td><td>No</td></tr><tr><td>OpenDBX		</td><td>opendbx			</td><td>opendbx		</td><td>Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		</td><td>opendbx library + client library</td></tr></table>
+<table style="border: solid thin"><tr><th>Driver		</th><th>Load group		</th><th>Driver id		</th><th>Supports Connection to	</th><th>External Dependency</th></tr><tr><td>Sqlite3		</td><td>sqlite3			</td><td>sqlite3		</td><td>Sqlite3					</td><td>sqlite library</td></tr><tr><td>PostgresV2		</td><td>pgsqlV2 or postgresV2	</td><td>postgresV2		</td><td>Postgres					</td><td>No</td></tr><tr><td>Mysql			</td><td>mysql				</td><td>mysql			</td><td>Mysql						</td><td>No</td></tr><tr><td>OpenDBX		</td><td>opendbx			</td><td>opendbx		</td><td>Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		</td><td>opendbx library + client library</td></tr></table>
 <h4>3. External dependencies</h4><a id="External dependencies"></a>
 <p>Some drivers require the extra installation of external dependencies such as libraries. This is the case of e.g., the sqlite and the opendbx drivers. These libraries should be installed in your system and be reachable by the virtual machine executable by doing one of the following:</p>
 <ul><li> Installing the libraries in the same directory than the virtual machine</li><li> In Unix like systems, specifying the LD_LIBRARY_PATH environment for the virtual machine</li><li> In Unix like systems, creating symlinks in a directory visible to the virtual machine pointing to the installed libraries</li><li> Installing the libraries in a globally visible directory (/usr/lib for Unix like systems or System32 in Windowz)</li></ul>
