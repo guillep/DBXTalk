@@ -1,0 +1,39 @@
+{{baseurl:/DBXTalk}}
+{{title:Garage}}
+{{subtitle:Connection Pool}}
+!Garage Connection Pool
+
+@@warning This page is still under construction
+
+The GAConnectionPool in the package Garage-ConnectionPool is a connection pool of GADriver connections. I create connections lazily as they are needed  in a batched way. If no more connections are available and I reached the maximum amount of alive connections, I try to purge connections and if not I throw an exception when a connection is demanded.
+
+I have the following main properties:
+
+- ""maxIdleConnections"": the maximum amount of unused connections that I handle. Default: 20.
+- ""maxConnections"": the maximum amount of connections I will keep alive in total (idle or not). Default: 20.
+- ""growSize"": it specifies the amount of connections to be created when no more free connections are available. Default: 5.
+- ""validationBlock"": a Block to specify an arbitrary expression to check if the connection is valid or not. A connection is considered not valid is the validation block throws an exception.
+
+This connection pool returns a GAPooledConnection, polymorphic to a GADriver. Upon close, the pooled connection is returned to the pool. The connection pool tries to purge itself and remove unused connections when the number of returned connections since the last purge arrives to the number of idle connections that should be discardable (maxidleconnections - maxconnections).
+
+!Installation
+
+Right now the connection pool does not have a configuration. This package depends on the Garage package.
+
+[[[language=Smalltalk
+Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Garage-ConnectionPool';
+	package: 'Garage-ConnectionPool';
+	load.
+]]]
+
+!Examples
+
+You can set the max amount of connections. Once you surpass the limit, it will throw an exception.
+
+[[[language=Smalltalk
+pool := GAConnectionPool forConnectionString: Fixture connectionString.
+pool maxConnections: 1.
+connection := pool getConnection.
+self should: [ pool getConnection ] raise: Error.
+]]]
