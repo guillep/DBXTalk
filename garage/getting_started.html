@@ -211,9 +211,9 @@
 
         <section id="main_content">
       	
-<h3>Entering the Garage</h3><a id="Entering the Garage"></a>
+<h3>Entering the Garage</h3>
 <p>This article describes the basics of the garage database driver. It covers its basic usage: creating connections, connecting and closing them, and executing SQL queries. Details and particular features are discussed in other related articles.</p>
-<h4>1. Getting a Connection</h4><a id="Getting a Connection"></a>
+<h4>1. Getting a Connection</h4>
 <p>The Garage database driver supports the creation of a connection through connection strings.</p>
 <p><figure><pre><code class="Smalltalk">connection := GADriver fromConnectionString:
 	'mysql://localhost:5432/sodbxtest?&amp;user=sodbxtest&amp;password=sodbxtest'.</code></pre><figcaption></figcaption></figure></p>
@@ -222,7 +222,7 @@
 <pre>driver://host:port/database?key=value&amp;key2=value2</pre>
 
 <p class="info"><strong>Which are the drivers I have?</strong> To know which are the available drivers you have, you can ask it to the driver class using the #availableDrivers message. For further information, check the <a href='installation.html'>installation page</a>.</p>
-<h4>2. Stablishing connection</h4><a id="Stablishing connection"></a>
+<h4>2. Stablishing connection</h4>
 <p>Initially and to avoid surprises, a database connection is not connected to the database. You can check if a connection is connected at any time during the life of the connection using the isConnected message.</p>
 <p><figure><pre><code class="Smalltalk">connection isConnected.
 	&quot; =&gt; true/false&quot;</code></pre><figcaption></figcaption></figure></p>
@@ -231,7 +231,7 @@
 <p>However, for those users that do not need to set manually parameters, he can use a shortcut that creates the connection and connects it in only one step.</p>
 <p><figure><pre><code class="Smalltalk">connection := GADriver connectToConnectionString: 
 	'mysql://localhost:3306/sodbxtest?user=sodbxtest&amp;password=sodbxtest'.</code></pre><figcaption></figcaption></figure></p>
-<h4>3. Sending a Query</h4><a id="Sending a Query"></a>
+<h4>3. Sending a Query</h4>
 <p>Once a connection is available, we can send queries and statements to it for their execution. Here we will only see a simple query, using the execute message. We will describe in details how queries and their results are managed later.</p>
 <p><figure><pre><code class="Smalltalk">connection execute: 'CREATE TABLE CATS (
 	name varchar(50),
@@ -240,7 +240,7 @@
 connection execute: 'SELECT * FROM CATS'.</code></pre><figcaption></figcaption></figure></p>
 <p>Executing a correct query will return an according result: a select query will answer a result with rows, other statements will return a result with a summary of the action they did (e.g., an insert or update will return the amount of modified rows). Executing a wrong query will throw an exception explaining the problem. For example, a query with incorrect syntax will fail and tell us where is the syntax problem; querying an unexistent table will throw an error saying so. We will dive later into the expected kind of results.</p>
 
-<h4>4. Closing the connection</h4><a id="Closing the connection"></a>
+<h4>4. Closing the connection</h4>
 <p>Database servers allow a limited number of simultaneous connections. If too many connections are open the server will start refusing new connections. To avoid these problems we have to close unused connections. Closing an unused connection will free used resources both in our Pharo image and in the database server. We can close manually a database connection by sending it the close message.</p>
 <p><figure><pre><code class="Smalltalk">connection close.</code></pre><figcaption></figcaption></figure></p>
 <p>Garage provides also the automatic closure of connections on garbage collection. That is, when a database connection object is being garbage collected, the connection will be automatically closed. To allow a database connection to be automatically collected, we must release all references to it. We must not keep references to a connection from any of our objects.</p>

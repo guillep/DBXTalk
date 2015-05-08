@@ -211,16 +211,16 @@
 
         <section id="main_content">
       	
-<h3>Installation</h3><a id="Installation"></a>
+<h3>Installation</h3>
 <p>This article describes how to install the Garage database driver. Garage is a database driver with a generic interface supporting operations on relational databases. Concrete drivers will implement this API to to provide a coherent way to use RDBMS.</p>
-<h4>1. Getting the metacello configuration</h4><a id="Getting the metacello configuration"></a>
+<h4>1. Getting the metacello configuration</h4>
 <p>Garage is easily installable using metacello. The home of garage is the <a href="http://www.smalltalkhub.com/#!/~DBXTalk/Garage">DBXTalk repository in Smalltalkhub</a>. You can download Garage's metacello configuration using a gofer script as follows</p>
 <p><figure><pre><code class="Smalltalk">Gofer it
 	smalltalkhubUser: 'DBXTalk' project: 'Garage';
 	configurationOf: 'Garage';
 	load.</code></pre><figcaption></figcaption></figure></p>
 
-<h4>2. Installing a driver</h4><a id="Installing a driver"></a>
+<h4>2. Installing a driver</h4>
 <p>Once you have the metacello configuration you can load one of the available drivers or all of them, by specifying a particular load group</p>
 <p><figure><pre><code class="Smalltalk">(ConfigurationOfGarage project version: '0.1')
 	load: loadGroup.
@@ -234,13 +234,13 @@
 	load.</code></pre><figcaption></figcaption></figure></p>
 <p>The following table specifies which are the supported drivers for download, which are their load groups and which are their external dependencies:</p>
 <table style="border: solid thin"><tr><th>Driver		</th><th>Load group		</th><th>Driver id		</th><th>Supports Connection to	</th><th>External Dependency</th></tr><tr><td>Sqlite3		</td><td>sqlite3			</td><td>sqlite3		</td><td>Sqlite3					</td><td>sqlite library</td></tr><tr><td>PostgresV2		</td><td>pgsqlV2 or postgresV2	</td><td>postgresV2		</td><td>Postgres					</td><td>No</td></tr><tr><td>Mysql			</td><td>mysql				</td><td>mysql			</td><td>Mysql						</td><td>No</td></tr><tr><td>OpenDBX		</td><td>opendbx			</td><td>opendbx		</td><td>Mysql,Sqlite3,Postgres, Oracle, SQLServer,	ODBC, others		</td><td>opendbx library + client library</td></tr></table>
-<h4>3. External dependencies</h4><a id="External dependencies"></a>
+<h4>3. External dependencies</h4>
 <p>Some drivers require the extra installation of external dependencies such as libraries. This is the case of e.g., the sqlite and the opendbx drivers. These libraries should be installed in your system and be reachable by the virtual machine executable by doing one of the following:</p>
 <ul><li> Installing the libraries in the same directory than the virtual machine</li><li> In Unix like systems, specifying the LD_LIBRARY_PATH environment for the virtual machine</li><li> In Unix like systems, creating symlinks in a directory visible to the virtual machine pointing to the installed libraries</li><li> Installing the libraries in a globally visible directory (/usr/lib for Unix like systems or System32 in Windowz)</li></ul>
 <p class="todo"><strong>TODO:</strong> point to the download links of each particular library</p>
-<h3>Checking my installation</h3><a id="Checking my installation"></a>
+<h3>Checking my installation</h3>
 <p>Once we installed our driver, we can check our installation by running the tests. However, we should understand which are the drivers we installed and how to configure the tests in our machine setup.</p>
-<h4>4. Which are the drivers I have</h4><a id="Which are the drivers I have"></a>
+<h4>4. Which are the drivers I have</h4>
 <p>To know which are the available drivers you have, you can ask it to the driver class. The driver class will answer with the ids of the available drivers. Drivers are automatically subscribed to a driver manager when they are loaded.</p>
 <p><figure><pre><code class="Smalltalk">GADriver availableDrivers.
 	&quot; =&gt; #(#mysql #opendbx #sqlite3 #postgresv2)&quot;</code></pre><figcaption></figcaption></figure></p>
@@ -249,7 +249,7 @@
 	&quot; =&gt; true&quot;
 GADriver isAvailable: #MySQl.
 	&quot; =&gt; true&quot;</code></pre><figcaption></figcaption></figure></p>
-<h4>5.  Running the tests</h4><a id=" Running the tests"></a>
+<h4>5.  Running the tests</h4>
 <p>Garage already provides a set of tests that check the correctness of the driver and thus, your particular installation. To test your installation you should tell the driver where to find your database server and how to connect to it.</p>
 <p class="warning"><strong>Warning:</strong> Garage tests will try to create a database named <em>sodbxtest</em> and many tables inside it to test. This should not be a problem but be careful if you intend to test your installation in a productive environment.</p>
 <p>Garage provides two ways to configure the tests to run. The first and simpler one is to override the method <strong>GADriverTest&gt;&gt;createFixture</strong>. This method should return a fixture that the tests are going to use to run. The method as you download it is as follows:</p>

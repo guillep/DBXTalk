@@ -211,7 +211,7 @@
 
         <section id="main_content">
       	
-<h3>Cursored Fetches</h3><a id="Cursored Fetches"></a>
+<h3>Cursored Fetches</h3>
 <p>Some Garage drivers supports cursored fetches from the database. That is, they will retrieve the results of a query in chunks of rows instead of reading all of them at once. This ability is important when we work with big amounts of data. Using cursored fetches will limit the amount of memory used and will allow us to manage the network throughput.</p>
 <p>Notice that not all Garage drivers support this feature. You can ask a connection if it supports cursored fetches by sending it the <strong>supportsCursoredFetch</strong> message. Take into account that a driver that does not support cursored fetches will fail will an exception when trying to do so.</p>
 <p><figure><pre><code class="Smalltalk">connection supportsCursoredFetch.</code></pre><figcaption></figcaption></figure></p>
@@ -237,7 +237,7 @@ readStream next: 40. &quot;will perform two trips also&quot;
 
 readStream next: 5; next:5; next: 10. &quot;will perform only one trip to bring the 20 rows&quot;</code></pre><figcaption></figcaption></figure></p>
 
-<h3>Driver subtleties</h3><a id="Driver subtleties"></a>
+<h3>Driver subtleties</h3>
 <p>Garage provides only a common interface to perform cursored fetches. Each driver will implement its own features differently. In this section we discuss what is the expected behavior of the exceptional cases.</p>
 <p>Drivers that not supporting cursored fetches will fail with an exception at the moment of configuring the fetch size.</p>
 <p><figure><pre><code class="Smalltalk">statement fetchSize: 20.
