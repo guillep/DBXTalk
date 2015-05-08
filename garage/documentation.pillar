@@ -12,6 +12,7 @@ Garage is the relational database driver for the *Pharo>http://pharo-project.org
 - {{{html:<a href='transactions.html'>Transactions</a>}}}
 - {{{html:<a href='prepared_statements.html'>Prepared Statements</a>}}}
 - {{{html:<a href='cursored_fetch.html'>Cursored Fetches</a>}}}
+- {{{html:<a href='connection_pooling.html'>Connection Pool</a>}}}
 
 !WebDoc
 
