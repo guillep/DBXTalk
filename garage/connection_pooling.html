@@ -211,23 +211,56 @@
 
         <section id="main_content">
       	<h3>Garage Connection Pool</h3>
-<p class="warning">This page is still under construction</p>
-<p>The GAConnectionPool in the package Garage-ConnectionPool is a connection pool of GADriver connections. I create connections lazily as they are needed  in a batched way. If no more connections are available and I reached the maximum amount of alive connections, I try to purge connections and if not I throw an exception when a connection is demanded.</p>
-<p>I have the following main properties:</p>
-<ul><li> <strong>maxIdleConnections</strong>: the maximum amount of unused connections that I handle. Default: 20.</li><li> <strong>maxConnections</strong>: the maximum amount of connections I will keep alive in total (idle or not). Default: 20.</li><li> <strong>growSize</strong>: it specifies the amount of connections to be created when no more free connections are available. Default: 5.</li><li> <strong>validationBlock</strong>: a Block to specify an arbitrary expression to check if the connection is valid or not. A connection is considered not valid is the validation block throws an exception.</li></ul>
-<p>This connection pool returns a GAPooledConnection, polymorphic to a GADriver. Upon close, the pooled connection is returned to the pool. The connection pool tries to purge itself and remove unused connections when the number of returned connections since the last purge arrives to the number of idle connections that should be discardable (maxidleconnections - maxconnections).</p>
+<p>The package Garage-ConnectionPool implements a connection pool of GADriver connections. It implements the following basic features:</p><ul><li> connection recycling</li><li> purging of idle connections</li><li> configurable grow size</li><li> configurable connection validation through a block.</li></ul>
+<p>This connection pool returns a GAPooledConnection, polymorphic to a normal garage connection. Upon close, the pooled connection is returned to the pool.</p>
 <h3>Installation</h3>
-<p>Right now the connection pool does not have a configuration. This package depends on the Garage package.</p>
+<p>To load garage's connection pool, you can use it's metacello configuration which is published in Garage's repository. The current stable version is 0.1. You can load it using the following expression:</p>
 <p><figure><pre><code class="Smalltalk">Gofer it
-	smalltalkhubUser: 'DBXTalk' project: 'Garage-ConnectionPool';
-	package: 'Garage-ConnectionPool';
-	load.</code></pre><figcaption></figcaption></figure></p>
-<h3>Examples</h3>
-<p>You can set the max amount of connections. Once you surpass the limit, it will throw an exception.</p>
-<p><figure><pre><code class="Smalltalk">pool := GAConnectionPool forConnectionString: Fixture connectionString.
-pool maxConnections: 1.
+	smalltalkhubUser: 'DBXTalk' project: 'Garage';
+	configurationOf: 'GarageConnectionPool';
+	loadVersion: '0.1'.</code></pre><figcaption></figcaption></figure></p>
+<p class="info">This configuration depends only on garage's core. It will not load a particular driver. If so is desired, please use the corresponding loading group in garage's configurartion to not bloat this configuration.</p>
+<h3>Basic Usage</h3>
+<p>A GAConnectionPool creates and serve connections as they are needed. We create and initialize a connection pool by using the <strong>forConnectionString:</strong> message with a connection string as argument.</p>
+<p><figure><pre><code class="Smalltalk">pool := GAConnectionPool forConnectionString: 'postgresV2://localhost:5432/postgres?user=postgres&amp;password=postgres'.</code></pre><figcaption></figcaption></figure></p>
+<p>Once we have a connection pool, we can ask it for a connection using the <strong>getConnection</strong> message.</p>
+<p><figure><pre><code class="Smalltalk">pool := GAConnectionPool forConnectionString: 'postgresV2://localhost:5432/postgres?user=postgres&amp;password=postgres'.
+connection := pool getConnection.</code></pre><figcaption></figcaption></figure></p>
+<p>If no connections are available but it has space to create more connections, it will create a new connection with the given connection string. If it cannot serve a connection, it will throw an exception notifying so.</p>
+<h3>Controlling the creation of connections</h3>
+<p>To avoid creating too many database connections, we can control the maximum number of connections that a connection pool creates with the <strong>maxConnections:</strong> message. By default, the value of <strong>maxConnections</strong> is 20. This means, the connection pool will not create more than 20 connections. If we are in this limit and a user asks for a connection to the pool, the pool will try to return an already existing connection that is unused. If no available connections, it will throw an exception notifying so.</p>
+<p><figure><pre><code class="Smalltalk">pool := GAConnectionPool forConnectionString: 'postgresV2://localhost:5432/postgres?user=postgres&amp;password=postgres'.
+
+pool maxConnections: 2.
+
 connection := pool getConnection.
-self should: [ pool getConnection ] raise: Error.</code></pre><figcaption></figcaption></figure></p>
+	&quot; =&gt; a connection&quot;
+anotherConnection := pool getConnection.
+	&quot; =&gt; a different connection&quot;
+
+pool getConnection.
+	&quot; =&gt; An exception!&quot;</code></pre><figcaption></figcaption></figure></p>
+<p>The garage connection pool also allows to control the rate in which connections are created. That is, connections are create in batches. By default these batches are of 1 connection. We can specify this rate using the <strong>growSize:</strong> message. Note that the grow rate will never make the pool grow over its configured maximum number of connections.</p>
+<h3>Controlling idle connections</h3>
+<p>To avoid having big numbers of unused or <em>idle</em> connections, we can configure the maximum amount of idle connections accepted by a connection pool using the <strong>maxIdleConnections:</strong> message. By default the garage connection pool allows 20 idle connections. Idle connections above this number will be closed automatically during the pool's <em>purge</em> phase. The pool's purge phase is executed when the number of returned connections since the last purge is the 75% of the maximum configured number of idle connections.</p>
+<p><figure><pre><code class="Smalltalk">pool := GAConnectionPool forConnectionString: 'postgresV2://localhost:5432/postgres?user=postgres&amp;password=postgres'.
+pool maxIdleConnections: 0.
+connection := pool getConnection.
+	&quot; =&gt; a new connection&quot;
+
+&quot;We return the connection to the pool&quot;
+connection close.
+
+&quot;We ask for a connection&quot;
+anotherConnection := pool getConnection.
+	&quot; =&gt; a different connection.
+	The old got closed because it was unused&quot;
+
+pool getConnection.
+	&quot; =&gt; An exception!&quot;</code></pre><figcaption></figcaption></figure></p>
+<p>To decide if a connection is still valid or not during the purge phase, garage's connection pool asks by default to the connection if it is connected, using the <strong>isConnected</strong> message. We can customize this behavior by specifying a validation block with the <strong>validationBlock:</strong> message. The validation block can contain any arbitrary expression checking if the connection is valid or not. The connection pool will interpret the validation block as follows: 
+ -A connection is considered alive if the validation block does not fail.
+ -On the contrary, it will be considered invalid if the validation block throws an exception.</p>
       	</section>
 		<footer class="footer">
           This website is developed using <a href="https://github.com/pillar-markup/pillar-documentation">Pillar</a><br>
