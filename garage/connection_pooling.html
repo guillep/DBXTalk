@@ -211,7 +211,7 @@
 
         <section id="main_content">
       	<h3>Garage Connection Pool</h3>
-<p>The package Garage-ConnectionPool implements a connection pool of GADriver connections. It implements the following basic features:</p><ul><li> connection recycling</li><li> purging of idle connections</li><li> configurable grow size</li><li> configurable connection validation through a block.</li></ul>
+<p>The package Garage-ConnectionPool implements a connection pool of garage connections. It implements the following basic features:</p><ul><li> connection recycling</li><li> purging of idle connections</li><li> configurable grow size</li><li> configurable connection validation through a block.</li></ul>
 <p>This connection pool returns a GAPooledConnection, polymorphic to a normal garage connection. Upon close, the pooled connection is returned to the pool.</p>
 <h3>Installation</h3>
 <p>To load garage's connection pool, you can use it's metacello configuration which is published in Garage's repository. The current stable version is 0.1. You can load it using the following expression:</p>

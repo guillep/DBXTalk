@@ -3,7 +3,7 @@
 {{subtitle:Connection Pool}}
 !Garage Connection Pool
 
-The package Garage-ConnectionPool implements a connection pool of GADriver connections. It implements the following basic features:
+The package Garage-ConnectionPool implements a connection pool of garage connections. It implements the following basic features:
 - connection recycling
 - purging of idle connections
 - configurable grow size
