@@ -6,24 +6,70 @@ Glorp is the Object-Relational-Mapper for Smalltalk. More on glorp will be added
 
 The current version is not adapted yet with garage. Glorp adaptors exist for Postgres and OpenDBX (in their corresponding groups in the configuration download), {{{html:<a href="http://www.smalltalkhub.com/#!/~PharoExtras/NBSQLite3">Sqlite3</a>}}} and {{{html:<a href="http://smalltalkhub.com/#!/~ThomasHeniart/GlorpDriverMySQL">Mysql</a>}}}.
 
-!!Installation
+!Installation
 
-Evaluating the following script loads the stable version of glorp.
+Current glorp's version is version 1.10, for Pharo 3.0 and 4.0. You can load glorp using its metacello configuration. For that, execute the following script.
 
 [[[language=Smalltalk
 Gofer it
-  squeaksource: 'MetacelloRepository';
-  package: 'ConfigurationOfGlorpDBX';
-  load.
-(((Smalltalk at: #ConfigurationOfGlorpDBX)
-    perform: #project)
-    perform: #version: with: #stable)
-        load
+	smalltalkhubUser: 'DBXTalk' project: 'Glorp';
+	configurationOf: 'Glorp';
+	loadVersion: '1.10'.
 ]]]
 
-!!Documentation
+As glorp works with many different database drivers, this configuration does not include a database driver. Database drivers are loadable separately from glorp. We explain how to load the existent glorp drivers in following subsections.
 
-The following list of resources explain the basics of glorp.
+!!Garage Glorp driver
+
+@@info Version 0.1 of GarageGlorp requires version 0.2 of garage or superior.
+
+The GarageGlorp package includes a Glorp driver using Garage. Current version of GarageGlorp driver is 0.1, and is available as a metacello configuration that can be loaded with the following script.
+
+[[[language=Smalltalk
+Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Garage';
+	configurationOf: 'GarageGlorp';
+	loadVersion: '0.1'.
+]]]
+
+This configuration will take care of loading the correct version of glorp. That is, there is no need to load Glorp separately. You will have however to load the particular garage driver of your choice. To configure glorp to use this driver, you should execute the following expression:
+
+[[[language=Smalltalk
+GAGlorpDriver beGlorpDefaultDriver.
+]]]
+
+!!PostgresV2 Glorp driver
+
+You can use glorp outside of Garage with the native Postgresql driver. You can load it by doing:
+
+[[[language=Smalltalk
+Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Configurations';
+	configurationOf: 'GlorpDBX';
+	load.
+(#ConfigurationOfGlorpDBX asClass project version:'2.9') load: 'GlorpPostgresV2Native'
+]]]
+
+!!Mysql Glorp driver
+
+You can use glorp outside of Garage with the native mysql driver. You can load it by doing:
+
+[[[language=Smalltalk
+Gofer new
+	smalltalkhubUser: 'ThomasHeniart' project: 'GlorpDriverMySQL';
+	configurationOf: 'GlorpDriverMySQL';
+	loadVersion: #bleedingEdge.
+
+NativeMysqlDriver beGlorpDefaultDriver.
+]]]
+
+!!NBSqlite3 Glorp driver
+
+Glorp is also compatible with the NBSqlite3 driver. Documentation for loading and using such driver can be found in *the smalltalkhub page of the project>http://www.smalltalkhub.com/#!/~PharoExtras/NBSQLite3*.
+
+!!Documentation and resources
+
+The following list of resources include tutorials and other documentations explaining how to use glorp.
 
 - {{{html:<a href="downloads/Glorp-Demo-AlanKnight.pdf">Glorp demo - Alan Knight - ppt</a>}}}
 - {{{html:<a href="downloads/Glorp-SeasideTutorial.pdf">Glorp tutorial for persistence in Seaside</a>}}}

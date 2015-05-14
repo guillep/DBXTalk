@@ -213,18 +213,41 @@
       	<h3>Glorp</h3>
 <p>Glorp is the Object-Relational-Mapper for Smalltalk. More on glorp will be added in the future.</p>
 <p>The current version is not adapted yet with garage. Glorp adaptors exist for Postgres and OpenDBX (in their corresponding groups in the configuration download), <a href="http://www.smalltalkhub.com/#!/~PharoExtras/NBSQLite3">Sqlite3</a> and <a href="http://smalltalkhub.com/#!/~ThomasHeniart/GlorpDriverMySQL">Mysql</a>.</p>
-<h4>1. Installation</h4>
-<p>Evaluating the following script loads the stable version of glorp.</p>
+<h3>Installation</h3>
+<p>Current glorp's version is version 1.10, for Pharo 3.0 and 4.0. You can load glorp using its metacello configuration. For that, execute the following script.</p>
 <p><figure><pre><code class="Smalltalk">Gofer it
-  squeaksource: 'MetacelloRepository';
-  package: 'ConfigurationOfGlorpDBX';
-  load.
-(((Smalltalk at: #ConfigurationOfGlorpDBX)
-    perform: #project)
-    perform: #version: with: #stable)
-        load</code></pre><figcaption></figcaption></figure></p>
-<h4>2. Documentation</h4>
-<p>The following list of resources explain the basics of glorp.</p>
+	smalltalkhubUser: 'DBXTalk' project: 'Glorp';
+	configurationOf: 'Glorp';
+	loadVersion: '1.10'.</code></pre><figcaption></figcaption></figure></p>
+<p>As glorp works with many different database drivers, this configuration does not include a database driver. Database drivers are loadable separately from glorp. We explain how to load the existent glorp drivers in following subsections.</p>
+<h4>1. Garage Glorp driver</h4>
+<p class="info">Version 0.1 of GarageGlorp requires version 0.2 of garage or superior.</p>
+<p>The GarageGlorp package includes a Glorp driver using Garage. Current version of GarageGlorp driver is 0.1, and is available as a metacello configuration that can be loaded with the following script.</p>
+<p><figure><pre><code class="Smalltalk">Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Garage';
+	configurationOf: 'GarageGlorp';
+	loadVersion: '0.1'.</code></pre><figcaption></figcaption></figure></p>
+<p>This configuration will take care of loading the correct version of glorp. That is, there is no need to load Glorp separately. You will have however to load the particular garage driver of your choice. To configure glorp to use this driver, you should execute the following expression:</p>
+<p><figure><pre><code class="Smalltalk">GAGlorpDriver beGlorpDefaultDriver.</code></pre><figcaption></figcaption></figure></p>
+<h4>2. PostgresV2 Glorp driver</h4>
+<p>You can use glorp outside of Garage with the native Postgresql driver. You can load it by doing:</p>
+<p><figure><pre><code class="Smalltalk">Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Configurations';
+	configurationOf: 'GlorpDBX';
+	load.
+(#ConfigurationOfGlorpDBX asClass project version:'2.9') load: 'GlorpPostgresV2Native'</code></pre><figcaption></figcaption></figure></p>
+<h4>3. Mysql Glorp driver</h4>
+<p>You can use glorp outside of Garage with the native mysql driver. You can load it by doing:</p>
+<p><figure><pre><code class="Smalltalk">Gofer new
+	smalltalkhubUser: 'ThomasHeniart' project: 'GlorpDriverMySQL';
+	configurationOf: 'GlorpDriverMySQL';
+	loadVersion: #bleedingEdge.
+
+NativeMysqlDriver beGlorpDefaultDriver.</code></pre><figcaption></figcaption></figure></p>
+<h4>4. NBSqlite3 Glorp driver</h4>
+<p>Glorp is also compatible with the NBSqlite3 driver. Documentation for loading and using such driver can be found in <a href="http://www.smalltalkhub.com/#!/~PharoExtras/NBSQLite3">the smalltalkhub page of the project</a>.</p>
+<h4>5. Documentation and resources</h4>
+<p>The following list of resources include tutorials and other documentations explaining how to use glorp.</p>
 <ul><li> <a href="downloads/Glorp-Demo-AlanKnight.pdf">Glorp demo - Alan Knight - ppt</a></li><li> <a href="downloads/Glorp-SeasideTutorial.pdf">Glorp tutorial for persistence in Seaside</a></li><li> <a href="downloads/Glorp-ShortPaper-AlanKnight.pdf">Glorp short paper - Alan Knight</a></li><li> <a href="downloads/Glorp-Tutorial-Cincom.pdf">Glorp tutorial slides - Alan Knight - pdf</a></li><li> <a href="downloads/Glorp-Tutorial-RogerWhitney.pdf">Glorp tutorial - Roger Whitney</a></li><li> <a href="downloads/Glorp-UserGuide-NevinPrattAlanKnight.pdf">Glorp User Guide - Nevin Pratt and Alan Knight</a></li></ul>
       	</section>
 		<footer class="footer">
