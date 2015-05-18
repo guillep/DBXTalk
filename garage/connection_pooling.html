@@ -261,6 +261,10 @@ pool getConnection.
 <p>To decide if a connection is still valid or not during the purge phase, garage's connection pool asks by default to the connection if it is connected, using the <strong>isConnected</strong> message. We can customize this behavior by specifying a validation block with the <strong>validationBlock:</strong> message. The validation block can contain any arbitrary expression checking if the connection is valid or not. The connection pool will interpret the validation block as follows: 
  -A connection is considered alive if the validation block does not fail.
  -On the contrary, it will be considered invalid if the validation block throws an exception.</p>
+
+<p>For example, we can customize the validation block as follows: 
+<figure><pre><code class="Smalltalk">pool := GAConnectionPool forConnectionString: 'postgresV2://localhost:5432/postgres?user=postgres&amp;password=postgres'.
+pool validationBlock: [ :connection | connection execute: 'SELECT 1+1;' ].</code></pre><figcaption></figcaption></figure></p>
       	</section>
 		<footer class="footer">
           This website is developed using <a href="https://github.com/pillar-markup/pillar-documentation">Pillar</a><br>
