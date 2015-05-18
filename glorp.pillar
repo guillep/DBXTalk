@@ -32,7 +32,21 @@ Gofer it
 	loadVersion: '0.1'.
 ]]]
 
-This configuration will take care of loading the correct version of glorp. That is, there is no need to load Glorp separately. You will have however to load the particular garage driver of your choice. To configure glorp to use this driver, you should execute the following expression:
+This configuration will take care of loading the correct version of glorp. That is, there is no need to load Glorp separately. You will have however to load the particular garage driver of your choice. For example, you can load Glorp and Garage's postgresV2 driver using the following script:
+
+[[[language=Smalltalk
+Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Garage';
+	configurationOf: 'GarageGlorp';
+	loadVersion: '0.1'.
+Gofer it
+	smalltalkhubUser: 'DBXTalk' project: 'Garage';
+	configurationOf: 'Garage';
+	load.
+(ConfigurationOfGarage project version: '0.2') load: #postgresqlV2.
+]]]
+
+To configure glorp to use this driver, you should execute the following expression:
 
 [[[language=Smalltalk
 GAGlorpDriver beGlorpDefaultDriver.
